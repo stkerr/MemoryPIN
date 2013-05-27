@@ -10,9 +10,12 @@ CONFIG_ROOT := $(PIN_ROOT)/source/tools/Config
 else
 CONFIG_ROOT := ../Config
 endif
+
 include $(CONFIG_ROOT)/makefile.config
 include makefile.rules
 include $(TOOLS_ROOT)/Config/makefile.default.rules
+
+COMP_OBJ := -I /usr/local/boost/include/ $(COMP_OBJ)
 
 ##############################################################
 #
