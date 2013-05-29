@@ -24,3 +24,6 @@
 
 .project
 .externalToolBuilders/
+.cproject
+.settings/
+tool/obj-intel64
