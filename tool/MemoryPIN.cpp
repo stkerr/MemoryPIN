@@ -1,14 +1,14 @@
-
-/*! @file
- *  This is an example of the PIN tool that demonstrates some basic PIN APIs 
- *  and could serve as the starting point for developing your first PIN tool
- */
-
 #include "pin.H"
 #include <iostream>
 #include <fstream>
 #include <boost/icl/split_interval_map.hpp>
 #include <string>
+
+/*
+ * Command line switches to define the memory region to monitor
+ */
+KNOB<int> KnobStartRegion(KNOB_MODE_OVERWRITE, "pintool", "startRegion", "0", "Indicates the start of the region to monitor");
+KNOB<int> KnobEndRegion(KNOB_MODE_OVERWRITE, "pintool", "endRegion", "0", "Indicates the end of the region to monitor");
 
 std::ostream * out = &cerr;
 
@@ -23,8 +23,7 @@ void instructionTrace(INS ins, void* v)
     while(it != address_lib_interval_map.end())
     {
         boost::icl::discrete_interval<int> range = (*it).first;
-        std::string name = (*it++).second;
-        
+        std::string name = (*it++).second; 
         if(boost::icl::contains(range, (int)INS_Address(ins)))
         {
             printf("%s", name.c_str());
@@ -72,6 +71,8 @@ int main(int argc, char *argv[])
     // Initialize PIN library. Print help message if -h(elp) is specified
     // in the command line or the command line is invalid 
     PIN_Init(argc,argv);
+
+    printf("Monitoring 0x%08x to 0x%08x\n",KnobStartRegion.Value(), KnobEndRegion.Value());
     
     IMG_AddInstrumentFunction(imageLoaded, 0);
     INS_AddInstrumentFunction(instructionTrace, 0);
