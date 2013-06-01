@@ -74,8 +74,31 @@ void imageLoaded(IMG img, void* data)
 
 }
 
-void dumpRegion(struct region *memRegion)
+// Globals needed to record the region in memory to monitor globally
+struct region monitorRegion;
+int writeInRange = 0;
+
+// Potentially set a memory dump after the memory write if it's in the region we care about
+VOID RecordMemWrite(VOID * ip, VOID * addr)
 {
+	struct region * memRegion = &monitorRegion;;
+
+	writeInRange = 0;
+
+	if((unsigned char*)addr >= memRegion->start && (unsigned char*)addr < memRegion->end)
+	{
+		// printf("%p: W %p\n", ip, addr);
+		writeInRange = 1;
+	}
+
+}
+
+
+void dumpRegion(VOID * region)
+{
+	struct region * memRegion = (struct region*)region;
+	printf("Dumping: %p %p\n", memRegion->start, memRegion->end);
+
 		if(memRegion->end - memRegion->start < 0)
 		{
 			fprintf(resultsFile, "Invalid memory region specified!\n");
@@ -92,7 +115,8 @@ void dumpRegion(struct region *memRegion)
 			fprintf(resultsFile, "%02x ", *iterator);
 			charCount++;
 			(charCount >= 16) ?
-					fprintf(resultsFile, "\n")
+					fprintf(resultsFile, "\n"),
+					charCount = 0
 					:
 					false
 					;
@@ -103,12 +127,49 @@ void dumpRegion(struct region *memRegion)
 
 void appStartFunction(void* region)
 {
-	dumpRegion((struct region*)region);
+	dumpRegion(&monitorRegion);
 }
 
 void appEndFunction(int exitCode, void* region)
 {
-	dumpRegion((struct region*)region);
+	dumpRegion(&monitorRegion);
+}
+
+void memoryMonitorFunction(INS ins, void* region)
+{
+	// does this instruction write memory?
+	if(INS_IsMemoryWrite(ins) != true)
+	{
+		return;
+	}
+
+	// iterate over all operands
+	for(unsigned int i = 0; i < INS_OperandCount(ins); i++)
+	{
+		// check if it is a memory operand
+		if(INS_OperandIsMemory(ins, i) != true)
+		{
+			continue;
+		}
+
+		if (INS_MemoryOperandIsWritten(ins, i))
+		{
+			INS_InsertCall(
+				ins, IPOINT_BEFORE, (AFUNPTR)RecordMemWrite,
+				IARG_INST_PTR,
+				IARG_MEMORYOP_EA, i,
+				IARG_END);
+
+			if(writeInRange != 0)
+			{
+				printf("Found it!\n");
+				INS_InsertCall(
+					ins, IPOINT_AFTER, (AFUNPTR)dumpRegion,
+					IARG_PTR, &monitorRegion,
+					IARG_END);
+			}
+		}
+	}
 }
 
 /*!
@@ -150,13 +211,15 @@ int main(int argc, char *argv[])
 		}
 
     	// Set up the region to monitor
-    	struct region memRegion;
-    	memRegion.start = reinterpret_cast<unsigned char*>(KnobStartRegion.Value());
-    	memRegion.end = reinterpret_cast<unsigned char*>(KnobEndRegion.Value());
+    	monitorRegion.start = reinterpret_cast<unsigned char*>(KnobStartRegion.Value());
+    	monitorRegion.end = reinterpret_cast<unsigned char*>(KnobEndRegion.Value());
 
     	// Add a start and end of application log function
-    	PIN_AddApplicationStartFunction(appStartFunction, &memRegion);
-    	PIN_AddFiniFunction(appEndFunction, &memRegion);
+    	PIN_AddApplicationStartFunction(appStartFunction, 0);
+    	PIN_AddFiniFunction(appEndFunction, 0);
+
+    	// Add an instruction instrumentation function to monitor the memory region
+    	INS_AddInstrumentFunction(memoryMonitorFunction, 0);
 
     	fprintf(resultsFile, "Monitoring 0x%08x to 0x%08x\n",KnobStartRegion.Value(), KnobEndRegion.Value());
     }
