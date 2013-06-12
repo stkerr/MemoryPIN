@@ -5,6 +5,7 @@
 #include <string>
 #include <stdio.h>
 
+
 struct region
 {
 	unsigned char* start;
@@ -183,7 +184,11 @@ int main(int argc, char *argv[])
 {
     // Initialize PIN library. Print help message if -h(elp) is specified
     // in the command line or the command line is invalid 
-    PIN_Init(argc,argv);
+    if( PIN_Init(argc,argv) )
+    {
+        std::cerr << KNOB_BASE::StringKnobSummary() << endl;
+        return -1;
+    }
 
     resultsFile = fopen(KnobResultsFile.Value().c_str(), "w");
 
