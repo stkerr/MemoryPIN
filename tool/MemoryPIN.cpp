@@ -30,7 +30,7 @@ FILE *instructionLogFile = 0;
 
 void instructionTrace(INS ins, void* v)
 {
-	fprintf(instructionLogFile, "Thread ID: 0x%8x : ", PIN_GetTid());
+	fprintf(instructionLogFile, "Thread ID: %8d : ", PIN_GetTid());
 
     fprintf(instructionLogFile, "Instruction Address: 0x%08x : ", (int)INS_Address(ins));
 
@@ -239,6 +239,7 @@ int main(int argc, char *argv[])
     PIN_StartProgram();
     
     fclose(resultsFile);
+    fclose(instructionLogFile);
 
     return 0;
 }
