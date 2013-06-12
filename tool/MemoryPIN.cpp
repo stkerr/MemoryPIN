@@ -26,10 +26,13 @@ std::ostream * out = &cerr;
 boost::icl::interval_map<int, std::string> address_lib_interval_map;
 
 FILE *resultsFile = 0;
+FILE *instructionLogFile = 0;
 
 void instructionTrace(INS ins, void* v)
 {
-    fprintf(resultsFile, "Instruction Address: 0x%08x : ", (int)INS_Address(ins));
+	fprintf(instructionLogFile, "Thread ID: 0x%8x : ", PIN_GetTid());
+
+    fprintf(instructionLogFile, "Instruction Address: 0x%08x : ", (int)INS_Address(ins));
 
     boost::icl::interval_map<int, std::string>::iterator it = address_lib_interval_map.begin();
 
@@ -39,12 +42,14 @@ void instructionTrace(INS ins, void* v)
         std::string name = (*it++).second;
         if(boost::icl::contains(range, (int)INS_Address(ins)))
         {
-            fprintf(resultsFile, "%s", name.c_str());
+            fprintf(instructionLogFile, "%s ", name.c_str());
             //std::cout << range << ":" << name << std::endl;
             break;
         }
     }
-    fprintf(resultsFile, "\n");
+
+    
+    fprintf(instructionLogFile, "\n");
  }
 
 void imageLoaded(IMG img, void* data)
@@ -197,6 +202,7 @@ int main(int argc, char *argv[])
     if(KnobInstructionTrace.Value())
     {
     	INS_AddInstrumentFunction(instructionTrace, 0);
+    	instructionLogFile = fopen("instructionTrace.txt","w");
     }
 
     if(KnobMonitorRegion.Value())
