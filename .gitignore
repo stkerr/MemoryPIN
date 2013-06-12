@@ -27,3 +27,10 @@
 .cproject
 .settings/
 tool/obj-intel64
+
+MemoryPINGui/Debug/*
+MemoryPINGui/Release/*
+MemoryPINGui/MemoryPINGui.sdf
+MemoryPINGui/MemoryPINGui.suo
+MemoryPINGui/MemoryPINGui/obj/*
+MemoryPINGui/MemoryPINGui/bin/*
