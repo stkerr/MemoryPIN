@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Collections.Specialized;
+using System.Runtime.InteropServices;
 
 namespace MemoryPINGui
 {
@@ -15,6 +16,7 @@ namespace MemoryPINGui
     {
         string fileOfInterest;
         string pinPath;
+        bool manualTracing = false;
 
         public Form1()
         {
@@ -55,7 +57,7 @@ namespace MemoryPINGui
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string paramString = "-t " + memoryPINDllPath.Text;
+            string paramString = "-t " + memoryPINDllPath.Text + " ";
             if (alternateResultsCheckbox.Checked)
             {
                 paramString += " -resultsfile " + alternateResultsCheckbox.Text + " ";
@@ -66,7 +68,7 @@ namespace MemoryPINGui
             }
             if (instructionTracingCheckbox.Checked)
             {
-                paramString += "-instructionTrace ";
+                paramString += " -instructionTrace ";
             }
             if (regionMonitorCheckBox.Checked)
             {
@@ -94,6 +96,12 @@ namespace MemoryPINGui
             psi.Arguments = paramString;
             psi.UseShellExecute = false;
             Process.Start(psi);
+
+            /* Fix up the manual tracing button (if applicable) */
+            if (manualTracingCheckbox.Checked == true)
+            {
+                startManualTracingButton.Enabled = true;
+            }
         }
 
         private void memorypinBox_DragDrop(object sender, DragEventArgs e)
@@ -133,6 +141,44 @@ namespace MemoryPINGui
             {
                 e.Effect = DragDropEffects.None;
             }
+        }
+
+        private void instructionTracingCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            manualTracingCheckbox.Enabled = true;
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern IntPtr OpenEvent(int desiredAccess, bool inheritHandle, string name);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern Boolean SetEvent(IntPtr hEvent);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern Boolean ResetEvent(IntPtr hEvent);
+
+        private void startManualTracingButton_Click(object sender, EventArgs e)
+        {
+            IntPtr eventHandle = OpenEvent(0x000F0000 | 0x00100000 | 0x03, false, "MonitoringEvent"); // EVENT_ALL_ACCESS
+
+            if (eventHandle == null)
+            {
+                return;
+            }
+
+            if (manualTracing == false)
+            {
+                SetEvent(eventHandle);
+                startManualTracingButton.Text = "Disable Manual Tracing";
+            }
+            else
+            {
+                ResetEvent(eventHandle);
+                startManualTracingButton.Text = "Enable Manual Tracing";
+            }
+
+            manualTracing = !manualTracing;
+            
         }
     }
 }
