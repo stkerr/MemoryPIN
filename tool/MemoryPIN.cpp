@@ -4,7 +4,10 @@
 #include <boost/icl/split_interval_map.hpp>
 #include <string>
 #include <stdio.h>
-
+namespace WINDOWS 
+{
+	#include<Windows.h>
+}
 
 struct region
 {
@@ -28,8 +31,50 @@ boost::icl::interval_map<int, std::string> address_lib_interval_map;
 FILE *resultsFile = 0;
 FILE *instructionLogFile = 0;
 
+WINDOWS::HANDLE hMonitoringEvent = 0;
+
+bool CheckMonitoringEvent()
+{
+	// Check the handle but return immediately
+	WINDOWS::DWORD result = WINDOWS::WaitForSingleObject(hMonitoringEvent, 0);
+
+	if(result == 0) // WAIT_OBJECT_0
+		return true;
+	else
+		return false;
+
+}
+
+void EnableMonitoringEvent()
+{
+	// signal the event
+	WINDOWS::SetEvent(hMonitoringEvent);
+}
+
+void DisableMonitoringEvent()
+{
+	WINDOWS::ResetEvent(hMonitoringEvent);
+}
+
+void InitMonitoringSemaphore()
+{
+	hMonitoringEvent = WINDOWS::CreateEvent( 
+        NULL,               // default security attributes
+        TRUE,               // manual-reset event
+        FALSE,              // initial state is nonsignaled
+        TEXT("MonitoringEvent")  // object name
+        );
+}
+
 void instructionTrace(INS ins, void* v)
 {
+
+	// check the monitoring event if we should still be monitoring or not
+	if(CheckMonitoringEvent() == false)
+	{
+		return;
+	}
+
 	fprintf(instructionLogFile, "Thread ID: %8d : ", PIN_GetTid());
 
     fprintf(instructionLogFile, "Instruction Address: 0x%08x : ", (int)INS_Address(ins));
@@ -52,7 +97,7 @@ void instructionTrace(INS ins, void* v)
     fprintf(instructionLogFile, "\n");
  }
 
-void imageLoaded(IMG img, void* data)
+void ImageLoadedFunction(IMG img, void* data)
 {
 	if(KnobLibraryLoadTrace.Value())
 	{
@@ -195,12 +240,15 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    
+
     resultsFile = fopen(KnobResultsFile.Value().c_str(), "w");
 
-    IMG_AddInstrumentFunction(imageLoaded, 0);
+    IMG_AddInstrumentFunction(ImageLoadedFunction, 0);
 
     if(KnobInstructionTrace.Value())
     {
+    	InitMonitoringSemaphore();
     	INS_AddInstrumentFunction(instructionTrace, 0);
     	instructionLogFile = fopen("instructionTrace.txt","w");
     }
