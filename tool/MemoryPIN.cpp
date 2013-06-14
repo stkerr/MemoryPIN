@@ -9,6 +9,8 @@ namespace WINDOWS
 	#include<Windows.h>
 }
 
+void dumpRegion(VOID * region);
+
 struct region
 {
 	unsigned char* start;
@@ -24,14 +26,19 @@ KNOB<std::string> KnobResultsFile(KNOB_MODE_OVERWRITE, "pintool", "resultsfile",
 KNOB<BOOL> KnobInstructionTrace(KNOB_MODE_OVERWRITE, "pintool", "instructionTrace", "false", "Enable instruction tracing.");
 KNOB<BOOL> KnobLibraryLoadTrace(KNOB_MODE_OVERWRITE, "pintool", "libraryLoadTrace", "false", "Print library load tracing.");
 KNOB<BOOL> KnobMonitorRegion(KNOB_MODE_OVERWRITE, "pintool", "monitorRegion", "false", "Enable region monitoring.");
+
+
+// Globals needed to record the region in memory to monitor globally
+struct region monitorRegion;
+int writeInRange = 0;
 std::ostream * out = &cerr;
-
+bool instructionTraceManualMode = false;
 boost::icl::interval_map<int, std::string> address_lib_interval_map;
-
 FILE *resultsFile = 0;
 FILE *instructionLogFile = 0;
-
 WINDOWS::HANDLE hMonitoringEvent = 0;
+bool lastMonitoringStatus = 0; // record the last value for the monitoring event
+int memDumpCount = 1;
 
 bool CheckMonitoringEvent()
 {
@@ -66,13 +73,60 @@ void InitMonitoringSemaphore()
         );
 }
 
-void instructionTrace(INS ins, void* v)
+void DumpAllMemoryRegions(char* filename)
 {
+	FILE *memoryFile = fopen(filename, "w");
+	
+	boost::icl::interval_map<int, std::string>::iterator it = address_lib_interval_map.begin();
 
-	// check the monitoring event if we should still be monitoring or not
-	if(CheckMonitoringEvent() == false)
+	while(it != address_lib_interval_map.end())
+    {
+        boost::icl::discrete_interval<int> range = (*it).first;
+        std::string name = (*it++).second;
+        fprintf(memoryFile, "%s\n",name.c_str());
+        fprintf(memoryFile, "0x%08x 0x%08x\n", range.lower(), range.upper());
+
+        unsigned char* regionIterator = (unsigned char*)range.lower();
+
+        
+        while(regionIterator != (unsigned char*)range.upper())
+        {
+        	//if(!WINDOWS::IsBadCodePtr((WINDOWS::FARPROC)regionIterator)) // DANGER! This will not protect against another thread mucking around with region access permissions
+        	//{
+        		// regionIterator++;
+        		// continue;
+        	// }
+        	fprintf(memoryFile, "%c", *regionIterator);
+        	regionIterator++;
+        }
+        fflush(memoryFile);
+        break;
+    }
+    fclose(memoryFile);
+}
+
+void InstructionTrace(INS ins, void* v)
+{
+	// check the monitoring event if we should still be monitoring or not 
+	bool monitoringStatus = CheckMonitoringEvent();
+	if(monitoringStatus != lastMonitoringStatus)
 	{
+		// We just detected a monitoring change! Take a memory snapshot now
+		char filename[1024];
+		memset(filename, 0, 1024);
+		sprintf(filename,"memorydump.%d.dmp",memDumpCount++);
+		DumpAllMemoryRegions(filename);
+		dumpRegion(&monitorRegion);
+	}
+
+	if( monitoringStatus == false)
+	{
+		lastMonitoringStatus = 0;
 		return;
+	}
+	else
+	{
+		lastMonitoringStatus = 1;
 	}
 
 	fprintf(instructionLogFile, "Thread ID: %8d : ", PIN_GetTid());
@@ -125,10 +179,6 @@ void ImageLoadedFunction(IMG img, void* data)
 
 }
 
-// Globals needed to record the region in memory to monitor globally
-struct region monitorRegion;
-int writeInRange = 0;
-
 // Potentially set a memory dump after the memory write if it's in the region we care about
 VOID RecordMemWrite(VOID * ip, VOID * addr)
 {
@@ -174,6 +224,7 @@ void dumpRegion(VOID * region)
 		}
 		fprintf(resultsFile, "\n");
 		fprintf(resultsFile, "-----\n");
+		fflush(resultsFile);
 }
 
 void appStartFunction(void* region)
@@ -249,7 +300,7 @@ int main(int argc, char *argv[])
     if(KnobInstructionTrace.Value())
     {
     	InitMonitoringSemaphore();
-    	INS_AddInstrumentFunction(instructionTrace, 0);
+    	INS_AddInstrumentFunction(InstructionTrace, 0);
     	instructionLogFile = fopen("instructionTrace.txt","w");
     }
 
