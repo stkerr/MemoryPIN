@@ -74,18 +74,13 @@ namespace MemoryPINGui
             {
                 try
                 {
-                    uint regionStart;
-                    uint regionEnd;
-                    if (UInt32.TryParse(regionStartBox.Text, out regionStart) == true)
-                    {
-                        if (UInt32.TryParse(regionStartBox.Text, out regionEnd) == true)
-                        {
-                            paramString += " -monitorRegion " + regionStart + " " + regionEnd + " ";
-                        }
-                    }
+                    uint regionStart = Convert.ToUInt32(regionStartBox.Text, 16);
+                    uint regionEnd = Convert.ToUInt32(regionEndBox.Text, 16);
+                    paramString += " -monitorRegion -startRegion " + regionStart + " -endRegion " + regionEnd + " ";
                 }
                 catch(Exception ex)
                 {
+                    MessageBox.Show("Invalid region parameters! Please enter hex values.");
                 }
                 
             }
