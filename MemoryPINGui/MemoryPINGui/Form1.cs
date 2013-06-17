@@ -10,17 +10,67 @@ using System.Diagnostics;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices;
 
+
 namespace MemoryPINGui
 {
+
     public partial class Form1 : Form
     {
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern IntPtr OpenEvent(int desiredAccess, bool inheritHandle, string name);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern Boolean SetEvent(IntPtr hEvent);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern Boolean ResetEvent(IntPtr hEvent);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern int WaitForSingleObject(IntPtr hHandle, int dwMilliseconds);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern Boolean CloseHandle(IntPtr hObject);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern int GetLastError();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern IntPtr CreateEvent(IntPtr lpEventAttributes, Boolean bManualReset, Boolean bInitialState, string lpName);
+
         string fileOfInterest;
         string pinPath;
-        bool manualTracing = false;
+        bool instructionTracing = false;
+
+        IntPtr hMonitoringEvent;
+        IntPtr hSnapshotEvent;
 
         public Form1()
         {
+            hMonitoringEvent = OpenEvent(0x000F0000 | 0x00100000 | 0x03, false, "MonitoringEvent"); // EVENT_ALL_ACCESS
+            if(hMonitoringEvent.ToInt32() == 0)
+            {
+                int error = GetLastError();
+                if (error == 2)
+                {
+                    // event is not created, let's make it
+                    hMonitoringEvent = CreateEvent(IntPtr.Zero, true, false, "MonitoringEvent".ToString());
+                }
+            }
+            hSnapshotEvent = OpenEvent(0x000F0000 | 0x00100000 | 0x03, false, "SnapshotEvent"); // EVENT_ALL_ACCESS
+            if(hSnapshotEvent.ToInt32() == 0)
+            {
+                int error = GetLastError();
+                if (error == 2)
+                {
+                    // event is not created, let's make it
+                    hSnapshotEvent = CreateEvent(IntPtr.Zero, true, false, "SnapshotEvent".ToString());
+                }
+            }
+
             InitializeComponent();
+
+            timer1.Interval = 500;
+            timer1.Start();
         }
 
         private void textBox1_DragEnter(object sender, DragEventArgs e)
@@ -60,7 +110,7 @@ namespace MemoryPINGui
             string paramString = "-t " + memoryPINDllPath.Text + " ";
             if (alternateResultsCheckbox.Checked)
             {
-                paramString += " -resultsfile " + alternateResultsCheckbox.Text + " ";
+                paramString += " -resultsfile " + resultsFileBox.Text + " ";
             }
             if (libraryLoadMonitoringCheckbox.Checked)
             {
@@ -87,16 +137,12 @@ namespace MemoryPINGui
 
             paramString += " -- " + textBox1.Text;
 
+            tabContainer.SelectTab(1); // switch to control tab
+
             ProcessStartInfo psi = new ProcessStartInfo(pinPathBox.Text);
             psi.Arguments = paramString;
             psi.UseShellExecute = false;
             Process.Start(psi);
-
-            /* Fix up the manual tracing button (if applicable) */
-            if (manualTracingCheckbox.Checked == true)
-            {
-                startManualTracingButton.Enabled = true;
-            }
         }
 
         private void memorypinBox_DragDrop(object sender, DragEventArgs e)
@@ -138,42 +184,133 @@ namespace MemoryPINGui
             }
         }
 
+
         private void instructionTracingCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            manualTracingCheckbox.Enabled = true;
-        }
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern IntPtr OpenEvent(int desiredAccess, bool inheritHandle, string name);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern Boolean SetEvent(IntPtr hEvent);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern Boolean ResetEvent(IntPtr hEvent);
-
-        private void startManualTracingButton_Click(object sender, EventArgs e)
-        {
-            IntPtr eventHandle = OpenEvent(0x000F0000 | 0x00100000 | 0x03, false, "MonitoringEvent"); // EVENT_ALL_ACCESS
-
-            if (eventHandle == null)
+            if (hMonitoringEvent == null)
             {
                 return;
             }
 
-            if (manualTracing == false)
+            if (instructionTracingCheckbox.Checked == true && instructionTracing == false)
             {
-                SetEvent(eventHandle);
-                startManualTracingButton.Text = "Disable Manual Tracing";
+                SetEvent(hMonitoringEvent);
+                startManualTracingButton.Text = "Disable Tracing";
+                instructionTracing = !instructionTracing;
+            }
+            else if (instructionTracingCheckbox.Checked == false && instructionTracing == true)
+            {
+                ResetEvent(hMonitoringEvent);
+                startManualTracingButton.Text = "Enable Tracing";
+                instructionTracing = !instructionTracing;
+            }
+        }
+
+        private void snapshotButton_Click(object sender, EventArgs e)
+        {
+            if (hSnapshotEvent == null)
+            {
+                return;
+            }
+
+            SetEvent(hSnapshotEvent);
+
+        }
+
+        private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (hMonitoringEvent == null)
+            {
+                return;
+            }
+
+            if (instructionTracing == false)
+            {
+                SetEvent(hMonitoringEvent);
+                startManualTracingButton.Text = "Disable Tracing";
+            }
+        }
+
+        private void tracingStatusLabel_Paint(object sender, PaintEventArgs e)
+        {
+            if (hMonitoringEvent == null || hMonitoringEvent.ToInt32() == 0)
+            {
+                tracingStatusLabel.Text = "Tracing Status: Error Retrieving";
+                return;
+            }
+
+            int result = WaitForSingleObject(hMonitoringEvent, 0);
+
+            if (result == 0) // WAIT_OBJECT_0
+            {
+                tracingStatusLabel.Text = "Tracing Status: Enabled";
+                startManualTracingButton.Text = "Disable Tracing";
             }
             else
             {
-                ResetEvent(eventHandle);
-                startManualTracingButton.Text = "Enable Manual Tracing";
+                tracingStatusLabel.Text = "Tracing Status: Disabled";
+                startManualTracingButton.Text = "Enable Tracing";
             }
 
-            manualTracing = !manualTracing;
-            
+        }
+
+        private void snapshotStatusLabel_Paint(object sender, PaintEventArgs e)
+        {
+            if (hSnapshotEvent == null || hSnapshotEvent.ToInt32() == 0)
+            {
+                snapshotStatusLabel.Text = "Snapshot Status: Error Retrieving";
+                return;
+            }
+
+            int result = WaitForSingleObject(hSnapshotEvent, 0);
+
+            if (result == 0) // WAIT_OBJECT_0
+            {
+                snapshotStatusLabel.Text = "Snapshot Status: Requested";
+            }
+            else
+            {
+                snapshotStatusLabel.Text = "Snapshot Status: Disabled";
+            }
+        }
+
+        private void snapshotButton_Click_1(object sender, EventArgs e)
+        {
+            int result = WaitForSingleObject(hSnapshotEvent, 0);
+
+            if (result == 0) // WAIT_OBJECT_0
+            {
+                // signaled, so reset
+                ResetEvent(hSnapshotEvent);
+                snapshotButton.Text = "Request Snapshot";
+            }
+            else
+            {
+                // not signaled, so set it
+                SetEvent(hSnapshotEvent);
+                snapshotButton.Text = "Revoke Snapshot Request";
+            }
+        }
+
+        private void startManualTracingButton_Click(object sender, EventArgs e)
+        {
+            int result = WaitForSingleObject(hMonitoringEvent, 0);
+
+            if (result == 0) // WAIT_OBJECT_0
+            {
+                // signaled, so reset
+                ResetEvent(hMonitoringEvent);
+            }
+            else
+            {
+                // not signaled, so set it
+                SetEvent(hMonitoringEvent);
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            this.Refresh();
         }
     }
 }

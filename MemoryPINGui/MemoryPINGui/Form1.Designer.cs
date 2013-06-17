@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.regionMonitorCheckBox = new System.Windows.Forms.CheckBox();
@@ -42,14 +43,24 @@
             this.pinPathBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.tabContainer = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.snapshotStatusLabel = new System.Windows.Forms.Label();
+            this.tracingStatusLabel = new System.Windows.Forms.Label();
             this.startManualTracingButton = new System.Windows.Forms.Button();
-            this.manualTracingCheckbox = new System.Windows.Forms.CheckBox();
+            this.snapshotButton = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tabContainer.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
             // 
             this.textBox1.AllowDrop = true;
-            this.textBox1.Location = new System.Drawing.Point(12, 12);
+            this.textBox1.Location = new System.Drawing.Point(13, 12);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(306, 20);
             this.textBox1.TabIndex = 0;
@@ -60,9 +71,9 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.AutoSize = true;
-            this.button1.Location = new System.Drawing.Point(12, 291);
+            this.button1.Location = new System.Drawing.Point(6, 312);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(493, 23);
+            this.button1.Size = new System.Drawing.Size(532, 23);
             this.button1.TabIndex = 12;
             this.button1.Text = "Execute PIN tool";
             this.button1.UseVisualStyleBackColor = true;
@@ -71,7 +82,7 @@
             // regionMonitorCheckBox
             // 
             this.regionMonitorCheckBox.AutoSize = true;
-            this.regionMonitorCheckBox.Location = new System.Drawing.Point(12, 126);
+            this.regionMonitorCheckBox.Location = new System.Drawing.Point(13, 101);
             this.regionMonitorCheckBox.Name = "regionMonitorCheckBox";
             this.regionMonitorCheckBox.Size = new System.Drawing.Size(112, 17);
             this.regionMonitorCheckBox.TabIndex = 3;
@@ -82,7 +93,7 @@
             // alternateResultsCheckbox
             // 
             this.alternateResultsCheckbox.AutoSize = true;
-            this.alternateResultsCheckbox.Location = new System.Drawing.Point(12, 153);
+            this.alternateResultsCheckbox.Location = new System.Drawing.Point(13, 128);
             this.alternateResultsCheckbox.Name = "alternateResultsCheckbox";
             this.alternateResultsCheckbox.Size = new System.Drawing.Size(125, 17);
             this.alternateResultsCheckbox.TabIndex = 6;
@@ -93,7 +104,7 @@
             // instructionTracingCheckbox
             // 
             this.instructionTracingCheckbox.AutoSize = true;
-            this.instructionTracingCheckbox.Location = new System.Drawing.Point(12, 178);
+            this.instructionTracingCheckbox.Location = new System.Drawing.Point(13, 153);
             this.instructionTracingCheckbox.Name = "instructionTracingCheckbox";
             this.instructionTracingCheckbox.Size = new System.Drawing.Size(114, 17);
             this.instructionTracingCheckbox.TabIndex = 8;
@@ -104,7 +115,7 @@
             // libraryLoadMonitoringCheckbox
             // 
             this.libraryLoadMonitoringCheckbox.AutoSize = true;
-            this.libraryLoadMonitoringCheckbox.Location = new System.Drawing.Point(12, 201);
+            this.libraryLoadMonitoringCheckbox.Location = new System.Drawing.Point(13, 176);
             this.libraryLoadMonitoringCheckbox.Name = "libraryLoadMonitoringCheckbox";
             this.libraryLoadMonitoringCheckbox.Size = new System.Drawing.Size(136, 17);
             this.libraryLoadMonitoringCheckbox.TabIndex = 11;
@@ -114,7 +125,7 @@
             // regionStartBox
             // 
             this.regionStartBox.Enabled = false;
-            this.regionStartBox.Location = new System.Drawing.Point(149, 123);
+            this.regionStartBox.Location = new System.Drawing.Point(150, 98);
             this.regionStartBox.Name = "regionStartBox";
             this.regionStartBox.Size = new System.Drawing.Size(175, 20);
             this.regionStartBox.TabIndex = 4;
@@ -122,7 +133,7 @@
             // regionEndBox
             // 
             this.regionEndBox.Enabled = false;
-            this.regionEndBox.Location = new System.Drawing.Point(330, 123);
+            this.regionEndBox.Location = new System.Drawing.Point(331, 98);
             this.regionEndBox.Name = "regionEndBox";
             this.regionEndBox.Size = new System.Drawing.Size(175, 20);
             this.regionEndBox.TabIndex = 5;
@@ -130,7 +141,7 @@
             // resultsFileBox
             // 
             this.resultsFileBox.Enabled = false;
-            this.resultsFileBox.Location = new System.Drawing.Point(149, 150);
+            this.resultsFileBox.Location = new System.Drawing.Point(150, 125);
             this.resultsFileBox.Name = "resultsFileBox";
             this.resultsFileBox.Size = new System.Drawing.Size(356, 20);
             this.resultsFileBox.TabIndex = 7;
@@ -138,7 +149,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(324, 13);
+            this.label1.Location = new System.Drawing.Point(325, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 13);
             this.label1.TabIndex = 6;
@@ -147,7 +158,7 @@
             // memoryPINDllPath
             // 
             this.memoryPINDllPath.AllowDrop = true;
-            this.memoryPINDllPath.Location = new System.Drawing.Point(12, 38);
+            this.memoryPINDllPath.Location = new System.Drawing.Point(13, 38);
             this.memoryPINDllPath.Name = "memoryPINDllPath";
             this.memoryPINDllPath.Size = new System.Drawing.Size(306, 20);
             this.memoryPINDllPath.TabIndex = 1;
@@ -157,7 +168,7 @@
             // pinPathBox
             // 
             this.pinPathBox.AllowDrop = true;
-            this.pinPathBox.Location = new System.Drawing.Point(12, 64);
+            this.pinPathBox.Location = new System.Drawing.Point(13, 64);
             this.pinPathBox.Name = "pinPathBox";
             this.pinPathBox.Size = new System.Drawing.Size(306, 20);
             this.pinPathBox.TabIndex = 2;
@@ -168,7 +179,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(325, 38);
+            this.label2.Location = new System.Drawing.Point(326, 38);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(85, 13);
             this.label2.TabIndex = 7;
@@ -177,59 +188,131 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(327, 64);
+            this.label3.Location = new System.Drawing.Point(328, 64);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(104, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Intel PIN Executable";
             // 
+            // tabContainer
+            // 
+            this.tabContainer.Controls.Add(this.tabPage1);
+            this.tabContainer.Controls.Add(this.tabPage2);
+            this.tabContainer.Location = new System.Drawing.Point(12, 12);
+            this.tabContainer.Name = "tabContainer";
+            this.tabContainer.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tabContainer.SelectedIndex = 0;
+            this.tabContainer.Size = new System.Drawing.Size(552, 367);
+            this.tabContainer.TabIndex = 14;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.checkBox1);
+            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Controls.Add(this.button1);
+            this.tabPage1.Controls.Add(this.memoryPINDllPath);
+            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Controls.Add(this.pinPathBox);
+            this.tabPage1.Controls.Add(this.label2);
+            this.tabPage1.Controls.Add(this.regionMonitorCheckBox);
+            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.alternateResultsCheckbox);
+            this.tabPage1.Controls.Add(this.resultsFileBox);
+            this.tabPage1.Controls.Add(this.instructionTracingCheckbox);
+            this.tabPage1.Controls.Add(this.regionEndBox);
+            this.tabPage1.Controls.Add(this.libraryLoadMonitoringCheckbox);
+            this.tabPage1.Controls.Add(this.regionStartBox);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(544, 341);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Configuration Page";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(150, 153);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(190, 17);
+            this.checkBox1.TabIndex = 13;
+            this.checkBox1.Text = "Enable Instruction Tracing on Start";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.snapshotStatusLabel);
+            this.tabPage2.Controls.Add(this.tracingStatusLabel);
+            this.tabPage2.Controls.Add(this.startManualTracingButton);
+            this.tabPage2.Controls.Add(this.snapshotButton);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(544, 341);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Control Page";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // snapshotStatusLabel
+            // 
+            this.snapshotStatusLabel.AutoSize = true;
+            this.snapshotStatusLabel.Location = new System.Drawing.Point(179, 40);
+            this.snapshotStatusLabel.Name = "snapshotStatusLabel";
+            this.snapshotStatusLabel.Size = new System.Drawing.Size(91, 13);
+            this.snapshotStatusLabel.TabIndex = 17;
+            this.snapshotStatusLabel.Text = "Snapshot Status: ";
+            this.snapshotStatusLabel.Paint += new System.Windows.Forms.PaintEventHandler(this.snapshotStatusLabel_Paint);
+            // 
+            // tracingStatusLabel
+            // 
+            this.tracingStatusLabel.AutoSize = true;
+            this.tracingStatusLabel.Location = new System.Drawing.Point(179, 11);
+            this.tracingStatusLabel.Name = "tracingStatusLabel";
+            this.tracingStatusLabel.Size = new System.Drawing.Size(82, 13);
+            this.tracingStatusLabel.TabIndex = 16;
+            this.tracingStatusLabel.Text = "Tracing Status: ";
+            this.tracingStatusLabel.Paint += new System.Windows.Forms.PaintEventHandler(this.tracingStatusLabel_Paint);
+            // 
             // startManualTracingButton
             // 
-            this.startManualTracingButton.Enabled = false;
-            this.startManualTracingButton.Location = new System.Drawing.Point(335, 172);
+            this.startManualTracingButton.Location = new System.Drawing.Point(3, 6);
             this.startManualTracingButton.Name = "startManualTracingButton";
             this.startManualTracingButton.Size = new System.Drawing.Size(170, 23);
-            this.startManualTracingButton.TabIndex = 10;
-            this.startManualTracingButton.Text = "Enable Manual Tracing";
+            this.startManualTracingButton.TabIndex = 15;
+            this.startManualTracingButton.Text = "Enable Tracing";
             this.startManualTracingButton.UseVisualStyleBackColor = true;
             this.startManualTracingButton.Click += new System.EventHandler(this.startManualTracingButton_Click);
             // 
-            // manualTracingCheckbox
+            // snapshotButton
             // 
-            this.manualTracingCheckbox.AutoSize = true;
-            this.manualTracingCheckbox.Enabled = false;
-            this.manualTracingCheckbox.Location = new System.Drawing.Point(149, 176);
-            this.manualTracingCheckbox.Name = "manualTracingCheckbox";
-            this.manualTracingCheckbox.Size = new System.Drawing.Size(155, 17);
-            this.manualTracingCheckbox.TabIndex = 9;
-            this.manualTracingCheckbox.Text = "Manual Tracing Start Mode";
-            this.manualTracingCheckbox.UseVisualStyleBackColor = true;
+            this.snapshotButton.Location = new System.Drawing.Point(3, 35);
+            this.snapshotButton.Name = "snapshotButton";
+            this.snapshotButton.Size = new System.Drawing.Size(170, 23);
+            this.snapshotButton.TabIndex = 14;
+            this.snapshotButton.Text = "Signal Snapshot";
+            this.snapshotButton.UseVisualStyleBackColor = true;
+            this.snapshotButton.Click += new System.EventHandler(this.snapshotButton_Click_1);
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(517, 326);
-            this.Controls.Add(this.manualTracingCheckbox);
-            this.Controls.Add(this.startManualTracingButton);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.resultsFileBox);
-            this.Controls.Add(this.regionEndBox);
-            this.Controls.Add(this.regionStartBox);
-            this.Controls.Add(this.libraryLoadMonitoringCheckbox);
-            this.Controls.Add(this.instructionTracingCheckbox);
-            this.Controls.Add(this.alternateResultsCheckbox);
-            this.Controls.Add(this.regionMonitorCheckBox);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.pinPathBox);
-            this.Controls.Add(this.memoryPINDllPath);
-            this.Controls.Add(this.textBox1);
+            this.ClientSize = new System.Drawing.Size(573, 392);
+            this.Controls.Add(this.tabContainer);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.tabContainer.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -249,8 +332,15 @@
         private System.Windows.Forms.TextBox pinPathBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TabControl tabContainer;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button startManualTracingButton;
-        private System.Windows.Forms.CheckBox manualTracingCheckbox;
+        private System.Windows.Forms.Button snapshotButton;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label snapshotStatusLabel;
+        private System.Windows.Forms.Label tracingStatusLabel;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
