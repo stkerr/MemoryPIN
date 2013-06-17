@@ -37,6 +37,7 @@ boost::icl::interval_map<int, std::string> address_lib_interval_map;
 FILE *resultsFile = 0;
 FILE *instructionLogFile = 0;
 WINDOWS::HANDLE hMonitoringEvent = 0;
+WINDOWS::HANDLE hSnapshotEvent = 0;
 bool lastMonitoringStatus = 0; // record the last value for the monitoring event
 int memDumpCount = 1;
 
@@ -52,25 +53,74 @@ bool CheckMonitoringEvent()
 
 }
 
+bool CheckSnapshotEvent()
+{
+	// Check the handle but return immediately
+	WINDOWS::DWORD result = WINDOWS::WaitForSingleObject(hSnapshotEvent, 0);
+
+	if(result == 0) // WAIT_OBJECT_0
+		return true;
+	else
+		return false;	
+}
+
 void EnableMonitoringEvent()
 {
 	// signal the event
 	WINDOWS::SetEvent(hMonitoringEvent);
 }
 
+void EnableSnapshotEvent()
+{
+	WINDOWS::SetEvent(hSnapshotEvent);
+}
 void DisableMonitoringEvent()
 {
 	WINDOWS::ResetEvent(hMonitoringEvent);
 }
 
-void InitMonitoringSemaphore()
+void DisableSnapshotEvent()
 {
-	hMonitoringEvent = WINDOWS::CreateEvent( 
+	WINDOWS::ResetEvent(hSnapshotEvent);
+}
+
+void InitEvents()
+{
+	int error = 0;
+
+	hMonitoringEvent = WINDOWS::OpenEvent(
+		EVENT_ALL_ACCESS,
+		false,
+		"MonitoringEvent"
+		);
+
+	error = WINDOWS::GetLastError();
+	if(hMonitoringEvent == 0 && error == 2)
+	{
+		hMonitoringEvent = WINDOWS::CreateEvent( 
         NULL,               // default security attributes
         TRUE,               // manual-reset event
         FALSE,              // initial state is nonsignaled
         TEXT("MonitoringEvent")  // object name
-        );
+        );	
+	}
+
+	hSnapshotEvent = WINDOWS::OpenEvent(
+		EVENT_ALL_ACCESS,
+		false,
+		"SnapshotEvent"
+		);
+	
+	error = WINDOWS::GetLastError();
+	if(hSnapshotEvent == 0 && error == 2)
+	{
+		hSnapshotEvent = WINDOWS::CreateEvent( 
+	        NULL,               // default security attributes
+	        TRUE,               // manual-reset event
+	        FALSE,              // initial state is nonsignaled
+	        TEXT("SnapshotEvent")  // object name
+	        );
+	}
 }
 
 void DumpAllMemoryRegions(char* filename)
@@ -107,31 +157,30 @@ void DumpAllMemoryRegions(char* filename)
 
 void InstructionTrace(INS ins, void* v)
 {
-	// check the monitoring event if we should still be monitoring or not 
-	bool monitoringStatus = CheckMonitoringEvent();
-	if(monitoringStatus != lastMonitoringStatus)
+	// check if we just received a snapshot request
+	bool snapshotStatus = CheckSnapshotEvent();
+	if(snapshotStatus)
 	{
 		// We just detected a monitoring change! Take a memory snapshot now
 		char filename[1024];
 		memset(filename, 0, 1024);
 		sprintf(filename,"memorydump.%d.dmp",memDumpCount++);
 		DumpAllMemoryRegions(filename);
-		dumpRegion(&monitorRegion);
+
+		// reset the event
+		DisableSnapshotEvent();
 	}
 
-	if( monitoringStatus == false)
+	// check the monitoring event if we should still be monitoring or not 
+	bool monitoringStatus = CheckMonitoringEvent();
+	if(!monitoringStatus)
 	{
-		lastMonitoringStatus = 0;
 		return;
 	}
-	else
-	{
-		lastMonitoringStatus = 1;
-	}
+	
+	fprintf(instructionLogFile, "Thread ID: %8d | ", PIN_GetTid());
 
-	fprintf(instructionLogFile, "Thread ID: %8d : ", PIN_GetTid());
-
-    fprintf(instructionLogFile, "Instruction Address: 0x%08x : ", (int)INS_Address(ins));
+    fprintf(instructionLogFile, "Instruction Address: 0x%08x | ", (int)INS_Address(ins));
 
     boost::icl::interval_map<int, std::string>::iterator it = address_lib_interval_map.begin();
 
@@ -164,6 +213,7 @@ void ImageLoadedFunction(IMG img, void* data)
 		//fprintf(resultsFile, "\tFirst Section: 0x%08x\n", (int)IMG_SecHead(img));
 		//fprintf(resultsFile, "\tLast Section: 0x%08x\n", (int)IMG_SecTail(img));
 		fprintf(resultsFile, "------\n");
+		fflush(resultsFile);
 	}
     boost::icl::discrete_interval<int> itv = boost::icl::discrete_interval<int>::right_open(
         (int)IMG_LowAddress(img),
@@ -200,31 +250,31 @@ void dumpRegion(VOID * region)
 	struct region * memRegion = (struct region*)region;
 	printf("Dumping: %p %p\n", memRegion->start, memRegion->end);
 
-		if(memRegion->end - memRegion->start < 0)
-		{
-			fprintf(resultsFile, "Invalid memory region specified!\n");
-			return;
-		}
-		fprintf(resultsFile, "-----\n");
-		fprintf(resultsFile, "Dumping region: %p to %p\n", memRegion->start, memRegion->end);
+	if(memRegion->end - memRegion->start < 0)
+	{
+		fprintf(resultsFile, "Invalid memory region specified!\n");
+		return;
+	}
+	fprintf(resultsFile, "-----\n");
+	fprintf(resultsFile, "Dumping region: %p to %p\n", memRegion->start, memRegion->end);
 
-		unsigned char* iterator = 0;
-		int charCount = 0;
-		for(iterator = memRegion->start; iterator != memRegion->end; iterator++)
-		{
+	unsigned char* iterator = 0;
+	int charCount = 0;
+	for(iterator = memRegion->start; iterator != memRegion->end; iterator++)
+	{
 
-			fprintf(resultsFile, "%02x ", *iterator);
-			charCount++;
-			(charCount >= 16) ?
-					fprintf(resultsFile, "\n"),
-					charCount = 0
-					:
-					false
-					;
-		}
-		fprintf(resultsFile, "\n");
-		fprintf(resultsFile, "-----\n");
-		fflush(resultsFile);
+		fprintf(resultsFile, "%02x ", *iterator);
+		charCount++;
+		(charCount >= 16) ?
+				fprintf(resultsFile, "\n"),
+				charCount = 0
+				:
+				false
+				;
+	}
+	fprintf(resultsFile, "\n");
+	fprintf(resultsFile, "-----\n");
+	fflush(resultsFile);
 }
 
 void appStartFunction(void* region)
@@ -291,7 +341,8 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    
+    // Initialize monitoring and snapshot events
+    InitEvents();
 
     resultsFile = fopen(KnobResultsFile.Value().c_str(), "w");
 
@@ -299,7 +350,7 @@ int main(int argc, char *argv[])
 
     if(KnobInstructionTrace.Value())
     {
-    	InitMonitoringSemaphore();
+    	
     	INS_AddInstrumentFunction(InstructionTrace, 0);
     	instructionLogFile = fopen("instructionTrace.txt","w");
     }
