@@ -312,5 +312,34 @@ namespace MemoryPINGui
         {
             this.Refresh();
         }
+
+        private void processLibraryLoadButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void processInstructionFileButton_Click(object sender, EventArgs e)
+        {
+            InstructionProcessor processor = new InstructionProcessor("instructionTrace.txt");
+
+            resultsTextBox.Text = "";
+            int count = 0;
+            foreach (Instruction i in processor.Instructions)
+            {
+                if (count++ > 100)
+                    break;
+                resultsTextBox.Text += i.Address.ToString("X8") + "\r\n";
+            }
+        }
+
+        private void resultsPageActive(object sender, EventArgs e)
+        {
+            timer1.Stop();
+        }
+
+        private void resultsPageInactive(object sender, EventArgs e)
+        {
+            timer1.Start();
+        }
     }
 }

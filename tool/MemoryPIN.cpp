@@ -183,7 +183,7 @@ void InstructionTrace(INS ins, void* v)
 	
 	fprintf(instructionLogFile, "Thread ID: %8d |", PIN_GetTid());
 
-    fprintf(instructionLogFile, "Instruction Address: 0x%08x |", (int)INS_Address(ins));
+    fprintf(instructionLogFile, "Instruction Address: %08d |", (int)INS_Address(ins));
 
     boost::icl::interval_map<int, std::string>::iterator it = address_lib_interval_map.begin();
 
@@ -198,8 +198,8 @@ void InstructionTrace(INS ins, void* v)
             break;
         }
     }
-    fprintf(instructionLogFile, "Instruction Count: 0x%x |", instructionCount++);
-	fprintf(instructionLogFile, "Time: 0x%x |", WINDOWS::GetTickCount());
+    fprintf(instructionLogFile, "Instruction Count: %d |", instructionCount++);
+	fprintf(instructionLogFile, "Time: %d |", WINDOWS::GetTickCount());
     fprintf(instructionLogFile, "\n");
  }
 

@@ -51,10 +51,11 @@
             this.tracingStatusLabel = new System.Windows.Forms.Label();
             this.startManualTracingButton = new System.Windows.Forms.Button();
             this.snapshotButton = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.resultsTextBox = new System.Windows.Forms.TextBox();
             this.processLibraryLoadButton = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.processInstructionFileButton = new System.Windows.Forms.Button();
             this.tabContainer.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -300,13 +301,10 @@
             this.snapshotButton.UseVisualStyleBackColor = true;
             this.snapshotButton.Click += new System.EventHandler(this.snapshotButton_Click_1);
             // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.textBox2);
+            this.tabPage3.Controls.Add(this.processInstructionFileButton);
+            this.tabPage3.Controls.Add(this.resultsTextBox);
             this.tabPage3.Controls.Add(this.processLibraryLoadButton);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -315,6 +313,17 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Results Page";
             this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPage3.Enter += new System.EventHandler(this.resultsPageActive);
+            this.tabPage3.Leave += new System.EventHandler(this.resultsPageInactive);
+            // 
+            // resultsTextBox
+            // 
+            this.resultsTextBox.Location = new System.Drawing.Point(4, 83);
+            this.resultsTextBox.Multiline = true;
+            this.resultsTextBox.Name = "resultsTextBox";
+            this.resultsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.resultsTextBox.Size = new System.Drawing.Size(534, 252);
+            this.resultsTextBox.TabIndex = 1;
             // 
             // processLibraryLoadButton
             // 
@@ -324,14 +333,21 @@
             this.processLibraryLoadButton.TabIndex = 0;
             this.processLibraryLoadButton.Text = "Process Library Loads";
             this.processLibraryLoadButton.UseVisualStyleBackColor = true;
+            this.processLibraryLoadButton.Click += new System.EventHandler(this.processLibraryLoadButton_Click);
             // 
-            // textBox2
+            // timer1
             // 
-            this.textBox2.Location = new System.Drawing.Point(4, 83);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(534, 252);
-            this.textBox2.TabIndex = 1;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // processInstructionFileButton
+            // 
+            this.processInstructionFileButton.Location = new System.Drawing.Point(160, 7);
+            this.processInstructionFileButton.Name = "processInstructionFileButton";
+            this.processInstructionFileButton.Size = new System.Drawing.Size(170, 23);
+            this.processInstructionFileButton.TabIndex = 2;
+            this.processInstructionFileButton.Text = "Process Instruction File";
+            this.processInstructionFileButton.UseVisualStyleBackColor = true;
+            this.processInstructionFileButton.Click += new System.EventHandler(this.processInstructionFileButton_Click);
             // 
             // Form1
             // 
@@ -378,8 +394,9 @@
         private System.Windows.Forms.Label tracingStatusLabel;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox resultsTextBox;
         private System.Windows.Forms.Button processLibraryLoadButton;
+        private System.Windows.Forms.Button processInstructionFileButton;
     }
 }
 
