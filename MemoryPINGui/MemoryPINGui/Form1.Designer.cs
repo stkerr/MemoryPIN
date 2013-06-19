@@ -52,9 +52,13 @@
             this.startManualTracingButton = new System.Windows.Forms.Button();
             this.snapshotButton = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.processLibraryLoadButton = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.tabContainer.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
@@ -198,6 +202,7 @@
             // 
             this.tabContainer.Controls.Add(this.tabPage1);
             this.tabContainer.Controls.Add(this.tabPage2);
+            this.tabContainer.Controls.Add(this.tabPage3);
             this.tabContainer.Location = new System.Drawing.Point(12, 12);
             this.tabContainer.Name = "tabContainer";
             this.tabContainer.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -299,6 +304,35 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.textBox2);
+            this.tabPage3.Controls.Add(this.processLibraryLoadButton);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(544, 341);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Results Page";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // processLibraryLoadButton
+            // 
+            this.processLibraryLoadButton.Location = new System.Drawing.Point(4, 7);
+            this.processLibraryLoadButton.Name = "processLibraryLoadButton";
+            this.processLibraryLoadButton.Size = new System.Drawing.Size(149, 23);
+            this.processLibraryLoadButton.TabIndex = 0;
+            this.processLibraryLoadButton.Text = "Process Library Loads";
+            this.processLibraryLoadButton.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(4, 83);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(534, 252);
+            this.textBox2.TabIndex = 1;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -312,6 +346,8 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -341,6 +377,9 @@
         private System.Windows.Forms.Label snapshotStatusLabel;
         private System.Windows.Forms.Label tracingStatusLabel;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button processLibraryLoadButton;
     }
 }
 
