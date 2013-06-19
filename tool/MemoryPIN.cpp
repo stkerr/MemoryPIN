@@ -4,6 +4,8 @@
 #include <boost/icl/split_interval_map.hpp>
 #include <string>
 #include <stdio.h>
+#include <time.h>
+
 namespace WINDOWS 
 {
 	#include<Windows.h>
@@ -40,6 +42,7 @@ WINDOWS::HANDLE hMonitoringEvent = 0;
 WINDOWS::HANDLE hSnapshotEvent = 0;
 bool lastMonitoringStatus = 0; // record the last value for the monitoring event
 int memDumpCount = 1;
+unsigned long instructionCount = 0; // the number of instructions we have traced
 
 bool CheckMonitoringEvent()
 {
@@ -178,9 +181,9 @@ void InstructionTrace(INS ins, void* v)
 		return;
 	}
 	
-	fprintf(instructionLogFile, "Thread ID: %8d | ", PIN_GetTid());
+	fprintf(instructionLogFile, "Thread ID: %8d |", PIN_GetTid());
 
-    fprintf(instructionLogFile, "Instruction Address: 0x%08x | ", (int)INS_Address(ins));
+    fprintf(instructionLogFile, "Instruction Address: 0x%08x |", (int)INS_Address(ins));
 
     boost::icl::interval_map<int, std::string>::iterator it = address_lib_interval_map.begin();
 
@@ -190,13 +193,13 @@ void InstructionTrace(INS ins, void* v)
         std::string name = (*it++).second;
         if(boost::icl::contains(range, (int)INS_Address(ins)))
         {
-            fprintf(instructionLogFile, "%s ", name.c_str());
+            fprintf(instructionLogFile, "Library Name: %s |", name.c_str());
             //std::cout << range << ":" << name << std::endl;
             break;
         }
     }
-
-    
+    fprintf(instructionLogFile, "Instruction Count: 0x%x |", instructionCount++);
+	fprintf(instructionLogFile, "Time: 0x%x |", WINDOWS::GetTickCount());
     fprintf(instructionLogFile, "\n");
  }
 
