@@ -71,6 +71,13 @@ namespace MemoryPINGui
     class InstructionProcessor
     {
         List<Instruction> instructions;
+        IList<string> libraries;
+
+        public IList<string> Libraries
+        {
+            get { return libraries; }
+            set { libraries = value; }
+        }
 
         internal List<Instruction> Instructions
         {
@@ -80,6 +87,7 @@ namespace MemoryPINGui
 
         public InstructionProcessor(string filename)
         {
+            Libraries = new List<string>();
             instructions = new List<Instruction>();
 
             StreamReader instructionfile = new StreamReader(filename);
@@ -98,6 +106,14 @@ namespace MemoryPINGui
                             string[] keyvalue = s.Split(new char[] {':'});
                             if (keyvalue.Length < 2)
                                 continue;
+                            if (keyvalue.Length > 2)
+                            {
+                                // there is a colon besides the field delimeter
+                                for (int i = 2; i < keyvalue.Length; i++)
+                                {
+                                    keyvalue[1] += keyvalue[i];
+                                }
+                            }
 
                             keyvalue[0] = keyvalue[0].Trim();
                             keyvalue[1] = keyvalue[1].Trim();
@@ -122,6 +138,10 @@ namespace MemoryPINGui
                                     break;
                                 case "Library Name":
                                     instr.Library = keyvalue[1].Trim();
+                                    if (!Libraries.Contains(keyvalue[1].Trim()))
+                                    {
+                                        Libraries.Add(keyvalue[1].Trim());
+                                    }
                                     break;
                                 case "Instruction Count":
                                     int count;

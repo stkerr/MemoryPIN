@@ -52,14 +52,18 @@
             this.startManualTracingButton = new System.Windows.Forms.Button();
             this.snapshotButton = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.resultsTextBox = new System.Windows.Forms.TextBox();
-            this.processLibraryLoadButton = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.loadedLibraryList = new System.Windows.Forms.ListBox();
+            this.libraryResultsProcessorBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.processInstructionFileButton = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabContainer.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.libraryResultsProcessorBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox1
@@ -76,9 +80,9 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.AutoSize = true;
-            this.button1.Location = new System.Drawing.Point(6, 312);
+            this.button1.Location = new System.Drawing.Point(6, 325);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(532, 23);
+            this.button1.Size = new System.Drawing.Size(947, 23);
             this.button1.TabIndex = 12;
             this.button1.Text = "Execute PIN tool";
             this.button1.UseVisualStyleBackColor = true;
@@ -204,11 +208,12 @@
             this.tabContainer.Controls.Add(this.tabPage1);
             this.tabContainer.Controls.Add(this.tabPage2);
             this.tabContainer.Controls.Add(this.tabPage3);
-            this.tabContainer.Location = new System.Drawing.Point(12, 12);
+            this.tabContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabContainer.Location = new System.Drawing.Point(0, 0);
             this.tabContainer.Name = "tabContainer";
             this.tabContainer.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.tabContainer.SelectedIndex = 0;
-            this.tabContainer.Size = new System.Drawing.Size(552, 367);
+            this.tabContainer.Size = new System.Drawing.Size(1262, 392);
             this.tabContainer.TabIndex = 14;
             // 
             // tabPage1
@@ -231,7 +236,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(544, 341);
+            this.tabPage1.Size = new System.Drawing.Size(1254, 366);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Configuration Page";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -256,7 +261,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(544, 341);
+            this.tabPage2.Size = new System.Drawing.Size(1254, 366);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Control Page";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -303,45 +308,65 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.processInstructionFileButton);
-            this.tabPage3.Controls.Add(this.resultsTextBox);
-            this.tabPage3.Controls.Add(this.processLibraryLoadButton);
+            this.tabPage3.Controls.Add(this.tableLayoutPanel1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(544, 341);
+            this.tabPage3.Size = new System.Drawing.Size(1254, 366);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Results Page";
             this.tabPage3.UseVisualStyleBackColor = true;
             this.tabPage3.Enter += new System.EventHandler(this.resultsPageActive);
             this.tabPage3.Leave += new System.EventHandler(this.resultsPageInactive);
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.resultsTextBox, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.loadedLibraryList, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.processInstructionFileButton, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1248, 360);
+            this.tableLayoutPanel1.TabIndex = 3;
+            // 
             // resultsTextBox
             // 
-            this.resultsTextBox.Location = new System.Drawing.Point(4, 83);
+            this.resultsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.resultsTextBox.Location = new System.Drawing.Point(3, 36);
             this.resultsTextBox.Multiline = true;
             this.resultsTextBox.Name = "resultsTextBox";
+            this.resultsTextBox.ReadOnly = true;
             this.resultsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.resultsTextBox.Size = new System.Drawing.Size(534, 252);
+            this.resultsTextBox.Size = new System.Drawing.Size(618, 321);
             this.resultsTextBox.TabIndex = 1;
             // 
-            // processLibraryLoadButton
+            // loadedLibraryList
             // 
-            this.processLibraryLoadButton.Location = new System.Drawing.Point(4, 7);
-            this.processLibraryLoadButton.Name = "processLibraryLoadButton";
-            this.processLibraryLoadButton.Size = new System.Drawing.Size(149, 23);
-            this.processLibraryLoadButton.TabIndex = 0;
-            this.processLibraryLoadButton.Text = "Process Library Loads";
-            this.processLibraryLoadButton.UseVisualStyleBackColor = true;
-            this.processLibraryLoadButton.Click += new System.EventHandler(this.processLibraryLoadButton_Click);
+            this.loadedLibraryList.DataSource = this.libraryResultsProcessorBindingSource;
+            this.loadedLibraryList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.loadedLibraryList.FormattingEnabled = true;
+            this.loadedLibraryList.Location = new System.Drawing.Point(627, 36);
+            this.loadedLibraryList.Name = "loadedLibraryList";
+            this.loadedLibraryList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.loadedLibraryList.Size = new System.Drawing.Size(618, 321);
+            this.loadedLibraryList.TabIndex = 2;
+            this.loadedLibraryList.SelectedValueChanged += new System.EventHandler(this.loadedLibraryList_SelectedValueChanged);
             // 
-            // timer1
+            // libraryResultsProcessorBindingSource
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.libraryResultsProcessorBindingSource.DataSource = typeof(MemoryPINGui.LibraryResultsProcessor);
             // 
             // processInstructionFileButton
             // 
-            this.processInstructionFileButton.Location = new System.Drawing.Point(160, 7);
+            this.processInstructionFileButton.Location = new System.Drawing.Point(3, 3);
             this.processInstructionFileButton.Name = "processInstructionFileButton";
             this.processInstructionFileButton.Size = new System.Drawing.Size(170, 23);
             this.processInstructionFileButton.TabIndex = 2;
@@ -349,11 +374,15 @@
             this.processInstructionFileButton.UseVisualStyleBackColor = true;
             this.processInstructionFileButton.Click += new System.EventHandler(this.processInstructionFileButton_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(573, 392);
+            this.ClientSize = new System.Drawing.Size(1262, 392);
             this.Controls.Add(this.tabContainer);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -363,7 +392,9 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.libraryResultsProcessorBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -394,9 +425,11 @@
         private System.Windows.Forms.Label tracingStatusLabel;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TextBox resultsTextBox;
-        private System.Windows.Forms.Button processLibraryLoadButton;
         private System.Windows.Forms.Button processInstructionFileButton;
+        private System.Windows.Forms.BindingSource libraryResultsProcessorBindingSource;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TextBox resultsTextBox;
+        private System.Windows.Forms.ListBox loadedLibraryList;
     }
 }
 
