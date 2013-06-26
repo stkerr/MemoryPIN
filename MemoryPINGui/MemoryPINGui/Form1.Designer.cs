@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.regionMonitorCheckBox = new System.Windows.Forms.CheckBox();
@@ -53,10 +54,16 @@
             this.snapshotButton = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.resultsTextBox = new System.Windows.Forms.TextBox();
             this.loadedLibraryList = new System.Windows.Forms.ListBox();
             this.libraryResultsProcessorBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.processInstructionFileButton = new System.Windows.Forms.Button();
+            this.resultsGridView = new System.Windows.Forms.DataGridView();
+            this.instructionnumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.addressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.threadidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.libraryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.instructionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabContainer.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -64,6 +71,8 @@
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.libraryResultsProcessorBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox1
@@ -322,11 +331,11 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.resultsTextBox, 0, 1);
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.64423F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.35577F));
             this.tableLayoutPanel1.Controls.Add(this.loadedLibraryList, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.processInstructionFileButton, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.resultsGridView, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -337,26 +346,15 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1248, 360);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
-            // resultsTextBox
-            // 
-            this.resultsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.resultsTextBox.Location = new System.Drawing.Point(3, 36);
-            this.resultsTextBox.Multiline = true;
-            this.resultsTextBox.Name = "resultsTextBox";
-            this.resultsTextBox.ReadOnly = true;
-            this.resultsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.resultsTextBox.Size = new System.Drawing.Size(618, 321);
-            this.resultsTextBox.TabIndex = 1;
-            // 
             // loadedLibraryList
             // 
             this.loadedLibraryList.DataSource = this.libraryResultsProcessorBindingSource;
             this.loadedLibraryList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.loadedLibraryList.FormattingEnabled = true;
-            this.loadedLibraryList.Location = new System.Drawing.Point(627, 36);
+            this.loadedLibraryList.Location = new System.Drawing.Point(659, 36);
             this.loadedLibraryList.Name = "loadedLibraryList";
             this.loadedLibraryList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.loadedLibraryList.Size = new System.Drawing.Size(618, 321);
+            this.loadedLibraryList.Size = new System.Drawing.Size(586, 321);
             this.loadedLibraryList.TabIndex = 2;
             this.loadedLibraryList.SelectedValueChanged += new System.EventHandler(this.loadedLibraryList_SelectedValueChanged);
             // 
@@ -373,6 +371,69 @@
             this.processInstructionFileButton.Text = "Process Instruction File";
             this.processInstructionFileButton.UseVisualStyleBackColor = true;
             this.processInstructionFileButton.Click += new System.EventHandler(this.processInstructionFileButton_Click);
+            // 
+            // resultsGridView
+            // 
+            this.resultsGridView.AllowUserToAddRows = false;
+            this.resultsGridView.AllowUserToDeleteRows = false;
+            this.resultsGridView.AutoGenerateColumns = false;
+            this.resultsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.resultsGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.instructionnumberDataGridViewTextBoxColumn,
+            this.addressDataGridViewTextBoxColumn,
+            this.threadidDataGridViewTextBoxColumn,
+            this.timeDataGridViewTextBoxColumn,
+            this.libraryDataGridViewTextBoxColumn});
+            this.resultsGridView.DataSource = this.instructionBindingSource;
+            this.resultsGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.resultsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.resultsGridView.Location = new System.Drawing.Point(3, 36);
+            this.resultsGridView.Name = "resultsGridView";
+            this.resultsGridView.ReadOnly = true;
+            this.resultsGridView.Size = new System.Drawing.Size(650, 321);
+            this.resultsGridView.TabIndex = 3;
+            // 
+            // instructionnumberDataGridViewTextBoxColumn
+            // 
+            this.instructionnumberDataGridViewTextBoxColumn.DataPropertyName = "Instructionnumber";
+            this.instructionnumberDataGridViewTextBoxColumn.HeaderText = "Instructionnumber";
+            this.instructionnumberDataGridViewTextBoxColumn.Name = "instructionnumberDataGridViewTextBoxColumn";
+            this.instructionnumberDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // addressDataGridViewTextBoxColumn
+            // 
+            this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
+            dataGridViewCellStyle1.Format = "X08";
+            dataGridViewCellStyle1.NullValue = "0";
+            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
+            this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
+            this.addressDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // threadidDataGridViewTextBoxColumn
+            // 
+            this.threadidDataGridViewTextBoxColumn.DataPropertyName = "Threadid";
+            this.threadidDataGridViewTextBoxColumn.HeaderText = "Threadid";
+            this.threadidDataGridViewTextBoxColumn.Name = "threadidDataGridViewTextBoxColumn";
+            this.threadidDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // timeDataGridViewTextBoxColumn
+            // 
+            this.timeDataGridViewTextBoxColumn.DataPropertyName = "Time";
+            this.timeDataGridViewTextBoxColumn.HeaderText = "Time";
+            this.timeDataGridViewTextBoxColumn.Name = "timeDataGridViewTextBoxColumn";
+            this.timeDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // libraryDataGridViewTextBoxColumn
+            // 
+            this.libraryDataGridViewTextBoxColumn.DataPropertyName = "Library";
+            this.libraryDataGridViewTextBoxColumn.HeaderText = "Library";
+            this.libraryDataGridViewTextBoxColumn.Name = "libraryDataGridViewTextBoxColumn";
+            this.libraryDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // instructionBindingSource
+            // 
+            this.instructionBindingSource.DataSource = typeof(MemoryPINGui.Instruction);
             // 
             // timer1
             // 
@@ -393,8 +454,9 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.libraryResultsProcessorBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -428,8 +490,14 @@
         private System.Windows.Forms.Button processInstructionFileButton;
         private System.Windows.Forms.BindingSource libraryResultsProcessorBindingSource;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TextBox resultsTextBox;
         private System.Windows.Forms.ListBox loadedLibraryList;
+        private System.Windows.Forms.BindingSource instructionBindingSource;
+        private System.Windows.Forms.DataGridView resultsGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn instructionnumberDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn threadidDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn libraryDataGridViewTextBoxColumn;
     }
 }
 

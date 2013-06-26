@@ -17,7 +17,6 @@ namespace MemoryPINGui
     public partial class Form1 : Form
     {
         InstructionProcessor processor;
-        Binding libraryListBinding;
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         internal static extern IntPtr OpenEvent(int desiredAccess, bool inheritHandle, string name);
@@ -41,7 +40,7 @@ namespace MemoryPINGui
         internal static extern IntPtr CreateEvent(IntPtr lpEventAttributes, Boolean bManualReset, Boolean bInitialState, string lpName);
 
         string fileOfInterest;
-        string pinPath;
+        //string pinPath;
         bool instructionTracing = false;
 
         IntPtr hMonitoringEvent;
@@ -325,16 +324,8 @@ namespace MemoryPINGui
         {
             processor = new InstructionProcessor("instructionTrace.txt");
 
-            resultsTextBox.Text = "";
-            int count = 0;
-            foreach (Instruction i in processor.Instructions)
-            {
-                if (count++ > 100)
-                    break;
-                resultsTextBox.Text += i.Address.ToString("X8") + "\r\n";
-            }
-
             libraryResultsProcessorBindingSource.DataSource = processor.Libraries;
+            instructionBindingSource.DataSource = processor.Instructions;
 
             for (int i = 0; i < processor.Libraries.Count; i++)
             {
@@ -362,24 +353,16 @@ namespace MemoryPINGui
             if (processor == null)
                 return;
 
-            List<string> selectedLibraries = new List<string>();
+            // refresh all the filtered libraries
+            processor.IncludedLibraries.RemoveAll(x => x != null);
             foreach(string item in loadedLibraryList.SelectedItems)
             {
-                selectedLibraries.Add(item);
+                if (!processor.IncludedLibraries.Contains(item))
+                    processor.IncludedLibraries.Add(item);
             }
 
-            resultsTextBox.Text = "";
-            int count = 0;
-            
-            foreach (Instruction i in processor.Instructions)
-            {
-                if (selectedLibraries.Contains(i.Library))
-                {
-                    resultsTextBox.Text += i.Address.ToString("X8") + ": " + i.Instructionnumber.ToString("X8") + " " + i.Threadid.ToString("X8") + "\r\n";
-                }
-            }
-
-            resultsTextBox.Refresh();
+            // update the data source
+            resultsGridView.DataSource = processor.Instructions;
         }
     }
 }

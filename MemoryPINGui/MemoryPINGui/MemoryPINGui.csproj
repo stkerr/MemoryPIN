@@ -69,7 +69,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="Properties\DataSources\Form1.datasource" />
+    <None Include="Properties\DataSources\Instruction.datasource" />
+    <None Include="Properties\DataSources\InstructionProcessor.datasource" />
+    <None Include="Properties\DataSources\Interval.datasource" />
     <None Include="Properties\DataSources\LibraryResultsProcessor.datasource" />
+    <None Include="Properties\DataSources\Program.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

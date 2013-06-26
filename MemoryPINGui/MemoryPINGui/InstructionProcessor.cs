@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 
 namespace MemoryPINGui
 {
-    class Instruction
+    public class Instruction : DataGridViewTextBoxColumn
     {
         int address;
         string library;
@@ -70,8 +71,16 @@ namespace MemoryPINGui
      */
     class InstructionProcessor
     {
-        List<Instruction> instructions;
+        IList<Instruction> instructions;
         IList<string> libraries;
+        private List<string> filteredLibraries;
+        private List<string> includedLibraries;
+
+        public List<string> IncludedLibraries
+        {
+            get { return includedLibraries; }
+            set { includedLibraries = value; }
+        }
 
         public IList<string> Libraries
         {
@@ -79,16 +88,23 @@ namespace MemoryPINGui
             set { libraries = value; }
         }
 
-        internal List<Instruction> Instructions
+        internal IList<Instruction> Instructions
         {
-            get { return instructions; }
+            get 
+            { 
+                // remove any filtered libraries
+                IList<Instruction> results = instructions.Where(x => includedLibraries.Contains(x.Library)).ToList<Instruction>();
+                return results;
+            }
             set { instructions = value; }
         }
 
         public InstructionProcessor(string filename)
         {
             Libraries = new List<string>();
+            filteredLibraries = new List<string>();
             instructions = new List<Instruction>();
+            includedLibraries = new List<string>();
 
             StreamReader instructionfile = new StreamReader(filename);
 
