@@ -7,13 +7,45 @@ using System.Windows.Forms;
 
 namespace MemoryPINGui
 {
+    public class Library
+    {
+        string name;
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+        int loadaddress;
+
+        public int Loadaddress
+        {
+            get { return loadaddress; }
+            set { loadaddress = value; }
+        }
+        int originaladdress;
+
+        public int Originaladdress
+        {
+            get { return originaladdress; }
+            set { originaladdress = value; }
+        }
+    }
+
     public class Instruction : DataGridViewTextBoxColumn
     {
         int address;
-        string library;
+        Library library;
         int threadid;
         int tickcount;
         int instructionnumber;
+        string libraryName;
+
+        public string LibraryName
+        {
+            get { return library.Name; }
+            set { library.Name = value; }
+        }
 
         public int Instructionnumber
         {
@@ -33,7 +65,7 @@ namespace MemoryPINGui
             set { threadid = value; }
         }
 
-        public string Library
+        public Library Library
         {
             get { return library; }
             set { library = value; }
@@ -48,7 +80,7 @@ namespace MemoryPINGui
         public Instruction(int address, string library, int threadid, int instructionnumber, int tickcount)
         {
             this.Address = address;
-            this.Library = library;
+            this.Library = null;
             this.Threadid = threadid;
             this.Instructionnumber = instructionnumber;
             this.Time = tickcount;
@@ -58,7 +90,7 @@ namespace MemoryPINGui
         public Instruction()
         {
             this.Address = 0;
-            this.Library = "";
+            this.Library = new Library();
             this.Threadid = -1;
             this.Instructionnumber = -1;
             this.Time = 0;
@@ -74,6 +106,14 @@ namespace MemoryPINGui
         IList<Instruction> instructions;
         IList<string> libraries;
         private List<string> includedLibraries;
+
+        IDictionary<string, int> libraryOffsetDictionary;
+
+        public IDictionary<string, int> LibraryOffsetDictionary
+        {
+            get { return libraryOffsetDictionary; }
+            set { libraryOffsetDictionary = value; }
+        }
 
         IList<int> threads;
 
@@ -105,9 +145,20 @@ namespace MemoryPINGui
         internal IList<Instruction> Instructions
         {
             get 
-            { 
+            {
                 // remove any filtered libraries
-                IList<Instruction> results = instructions.Where(x => includedLibraries.Contains(x.Library) && includedThreads.Contains(x.Threadid)).ToList<Instruction>();
+
+                IList<Instruction> results = instructions.Where(x => includedLibraries.Contains(x.LibraryName) && includedThreads.Contains(x.Threadid)).ToList<Instruction>();
+                /*
+                // go through and adjust any instructions that have modified load addresses
+                foreach(Instruction i in results)
+                {
+                    if(libraryOffsetDictionary.ContainsKey(i.Library.Name))
+                    {
+                        i.Address = i.Address - i.Library.Loadaddress + i.Library.Originaladdress;
+                    }
+                }
+                */
                 return results;
             }
             set { instructions = value; }
@@ -120,6 +171,7 @@ namespace MemoryPINGui
             includedLibraries = new List<string>();
             threads = new List<int>();
             includedThreads = new List<int>();
+            libraryOffsetDictionary = new Dictionary<string, int>();
 
             StreamReader instructionfile = new StreamReader(filename);
 
@@ -149,8 +201,6 @@ namespace MemoryPINGui
                             keyvalue[0] = keyvalue[0].Trim();
                             keyvalue[1] = keyvalue[1].Trim();
 
-
-                            
                             switch (keyvalue[0])
                             {
                                 case "Thread ID":
@@ -167,16 +217,17 @@ namespace MemoryPINGui
                                 case "Instruction Address":
                                     int addr;
                                     if (int.TryParse(keyvalue[1], out addr))
+                                    {
                                         instr.Address = addr;
+                                        instr.Library.Loadaddress = instr.Library.Originaladdress = addr;
+                                    }
                                     else
                                         instr.Address = -1;
                                     break;
                                 case "Library Name":
-                                    instr.Library = keyvalue[1].Trim();
-                                    if (!Libraries.Contains(keyvalue[1].Trim()))
-                                    {
-                                        Libraries.Add(keyvalue[1].Trim());
-                                    }
+                                    if(!libraries.Contains(keyvalue[1].Trim()))
+                                        libraries.Add(keyvalue[1].Trim());
+                                    instr.Library.Name = keyvalue[1].Trim();
                                     break;
                                 case "Instruction Count":
                                     int count;

@@ -346,7 +346,7 @@ namespace MemoryPINGui
         
         private void loadedLibraryList_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (processor == null)
+            if (processor == null || processor.Libraries.Count == 0)
                 return;
 
             // refresh all the filtered libraries
@@ -363,7 +363,7 @@ namespace MemoryPINGui
 
         private void loadedThreadList_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (processor == null)
+            if (processor == null || processor.Threads.Count == 0)
                 return;
 
             // refresh all the filtered libraries
@@ -376,6 +376,15 @@ namespace MemoryPINGui
 
             // update the data source
             resultsGridView.DataSource = processor.Instructions; // refresh the instruction view
+        }
+
+        private void loadedLibraryList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(loadedLibraryList.Items.Count == 0)
+            {
+                return;
+            }
+            return;
         }
     }
 }

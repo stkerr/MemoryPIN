@@ -62,7 +62,7 @@
             this.addressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.threadidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.libraryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LibraryName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.instructionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.loadedThreadList = new System.Windows.Forms.ListBox();
             this.threadBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -361,6 +361,7 @@
             this.loadedLibraryList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.loadedLibraryList.Size = new System.Drawing.Size(586, 157);
             this.loadedLibraryList.TabIndex = 2;
+            this.loadedLibraryList.SelectedIndexChanged += new System.EventHandler(this.loadedLibraryList_SelectedIndexChanged);
             this.loadedLibraryList.SelectedValueChanged += new System.EventHandler(this.loadedLibraryList_SelectedValueChanged);
             // 
             // librariesBindingSource
@@ -388,7 +389,7 @@
             this.addressDataGridViewTextBoxColumn,
             this.threadidDataGridViewTextBoxColumn,
             this.timeDataGridViewTextBoxColumn,
-            this.libraryDataGridViewTextBoxColumn});
+            this.LibraryName});
             this.resultsGridView.DataSource = this.instructionBindingSource;
             this.resultsGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.resultsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -431,12 +432,12 @@
             this.timeDataGridViewTextBoxColumn.Name = "timeDataGridViewTextBoxColumn";
             this.timeDataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // libraryDataGridViewTextBoxColumn
+            // LibraryName
             // 
-            this.libraryDataGridViewTextBoxColumn.DataPropertyName = "Library";
-            this.libraryDataGridViewTextBoxColumn.HeaderText = "Library";
-            this.libraryDataGridViewTextBoxColumn.Name = "libraryDataGridViewTextBoxColumn";
-            this.libraryDataGridViewTextBoxColumn.ReadOnly = true;
+            this.LibraryName.DataPropertyName = "LibraryName";
+            this.LibraryName.HeaderText = "LibraryName";
+            this.LibraryName.Name = "LibraryName";
+            this.LibraryName.ReadOnly = true;
             // 
             // instructionBindingSource
             // 
@@ -513,13 +514,13 @@
         private System.Windows.Forms.ListBox loadedLibraryList;
         private System.Windows.Forms.BindingSource instructionBindingSource;
         private System.Windows.Forms.DataGridView resultsGridView;
+        private System.Windows.Forms.ListBox loadedThreadList;
+        private System.Windows.Forms.BindingSource threadBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn instructionnumberDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn threadidDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn libraryDataGridViewTextBoxColumn;
-        private System.Windows.Forms.ListBox loadedThreadList;
-        private System.Windows.Forms.BindingSource threadBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LibraryName;
     }
 }
 
