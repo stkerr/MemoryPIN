@@ -55,6 +55,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.loadedLibraryList = new System.Windows.Forms.ListBox();
+            this.libraryListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.librariesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.processInstructionFileButton = new System.Windows.Forms.Button();
             this.resultsGridView = new System.Windows.Forms.DataGridView();
@@ -67,11 +68,13 @@
             this.loadedThreadList = new System.Windows.Forms.ListBox();
             this.threadBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabContainer.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.libraryListContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.librariesBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).BeginInit();
@@ -353,6 +356,7 @@
             // 
             // loadedLibraryList
             // 
+            this.loadedLibraryList.ContextMenuStrip = this.libraryListContextMenu;
             this.loadedLibraryList.DataSource = this.librariesBindingSource;
             this.loadedLibraryList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.loadedLibraryList.FormattingEnabled = true;
@@ -361,8 +365,16 @@
             this.loadedLibraryList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.loadedLibraryList.Size = new System.Drawing.Size(586, 157);
             this.loadedLibraryList.TabIndex = 2;
+            this.loadedLibraryList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.loadedLibraryList_MouseClick);
             this.loadedLibraryList.SelectedIndexChanged += new System.EventHandler(this.loadedLibraryList_SelectedIndexChanged);
             this.loadedLibraryList.SelectedValueChanged += new System.EventHandler(this.loadedLibraryList_SelectedValueChanged);
+            // 
+            // libraryListContextMenu
+            // 
+            this.libraryListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1});
+            this.libraryListContextMenu.Name = "libraryListContextMenu";
+            this.libraryListContextMenu.Size = new System.Drawing.Size(153, 48);
             // 
             // librariesBindingSource
             // 
@@ -459,6 +471,12 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Text = "Library Rebase";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -474,6 +492,7 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.libraryListContextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.librariesBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).EndInit();
@@ -521,6 +540,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn threadidDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn LibraryName;
+        private System.Windows.Forms.ContextMenuStrip libraryListContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
 

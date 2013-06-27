@@ -149,7 +149,7 @@ namespace MemoryPINGui
                 // remove any filtered libraries
 
                 IList<Instruction> results = instructions.Where(x => includedLibraries.Contains(x.LibraryName) && includedThreads.Contains(x.Threadid)).ToList<Instruction>();
-                /*
+                
                 // go through and adjust any instructions that have modified load addresses
                 foreach(Instruction i in results)
                 {
@@ -158,7 +158,7 @@ namespace MemoryPINGui
                         i.Address = i.Address - i.Library.Loadaddress + i.Library.Originaladdress;
                     }
                 }
-                */
+                
                 return results;
             }
             set { instructions = value; }

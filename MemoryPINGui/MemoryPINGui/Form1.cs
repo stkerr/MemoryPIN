@@ -386,5 +386,14 @@ namespace MemoryPINGui
             }
             return;
         }
+
+        private void loadedLibraryList_MouseClick(object sender, MouseEventArgs e)
+        {
+            
+            if (e.Button == MouseButtons.Right)
+            {
+                // open some options on right click
+            }
+        }
     }
 }
