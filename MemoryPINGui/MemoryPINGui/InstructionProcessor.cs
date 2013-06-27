@@ -73,8 +73,22 @@ namespace MemoryPINGui
     {
         IList<Instruction> instructions;
         IList<string> libraries;
-        private List<string> filteredLibraries;
         private List<string> includedLibraries;
+
+        IList<int> threads;
+
+        public IList<int> Threads
+        {
+            get { return threads; }
+            set { threads = value; }
+        }
+        private List<int> includedThreads;
+
+        public List<int> IncludedThreads
+        {
+            get { return includedThreads; }
+            set { includedThreads = value; }
+        }
 
         public List<string> IncludedLibraries
         {
@@ -93,7 +107,7 @@ namespace MemoryPINGui
             get 
             { 
                 // remove any filtered libraries
-                IList<Instruction> results = instructions.Where(x => includedLibraries.Contains(x.Library)).ToList<Instruction>();
+                IList<Instruction> results = instructions.Where(x => includedLibraries.Contains(x.Library) && includedThreads.Contains(x.Threadid)).ToList<Instruction>();
                 return results;
             }
             set { instructions = value; }
@@ -102,9 +116,10 @@ namespace MemoryPINGui
         public InstructionProcessor(string filename)
         {
             Libraries = new List<string>();
-            filteredLibraries = new List<string>();
             instructions = new List<Instruction>();
             includedLibraries = new List<string>();
+            threads = new List<int>();
+            includedThreads = new List<int>();
 
             StreamReader instructionfile = new StreamReader(filename);
 
@@ -141,7 +156,11 @@ namespace MemoryPINGui
                                 case "Thread ID":
                                     int id;
                                     if (Int32.TryParse(keyvalue[1], out id))
+                                    {
                                         instr.Threadid = id;
+                                        if (!Threads.Contains(id))
+                                            Threads.Add(id);
+                                    }
                                     else
                                         instr.Threadid = -1;
                                     break;

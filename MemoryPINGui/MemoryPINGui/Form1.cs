@@ -315,21 +315,22 @@ namespace MemoryPINGui
             this.Refresh();
         }
 
-        private void processLibraryLoadButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void processInstructionFileButton_Click(object sender, EventArgs e)
         {
             processor = new InstructionProcessor("instructionTrace.txt");
 
-            libraryResultsProcessorBindingSource.DataSource = processor.Libraries;
+            librariesBindingSource.DataSource = processor.Libraries;
             instructionBindingSource.DataSource = processor.Instructions;
+            threadBindingSource.DataSource = processor.Threads;
 
             for (int i = 0; i < processor.Libraries.Count; i++)
             {
                 loadedLibraryList.SetSelected(i, true); // select all the libraries initially
+            }
+
+            for (int i = 0; i < processor.Threads.Count; i++)
+            {
+                loadedThreadList.SetSelected(i, true); // select all threads initially
             }
         }
 
@@ -342,12 +343,7 @@ namespace MemoryPINGui
         {
             timer1.Start();
         }
-
-        private void resultsTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void loadedLibraryList_SelectedValueChanged(object sender, EventArgs e)
         {
             if (processor == null)
@@ -363,6 +359,23 @@ namespace MemoryPINGui
 
             // update the data source
             resultsGridView.DataSource = processor.Instructions;
+        }
+
+        private void loadedThreadList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (processor == null)
+                return;
+
+            // refresh all the filtered libraries
+            processor.IncludedThreads.RemoveAll(x => x != null);
+            foreach (int item in loadedThreadList.SelectedItems)
+            {
+                if (!processor.IncludedThreads.Contains(item))
+                    processor.IncludedThreads.Add(item);
+            }
+
+            // update the data source
+            resultsGridView.DataSource = processor.Instructions; // refresh the instruction view
         }
     }
 }

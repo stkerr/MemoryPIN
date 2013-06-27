@@ -55,7 +55,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.loadedLibraryList = new System.Windows.Forms.ListBox();
-            this.libraryResultsProcessorBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.librariesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.processInstructionFileButton = new System.Windows.Forms.Button();
             this.resultsGridView = new System.Windows.Forms.DataGridView();
             this.instructionnumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -64,15 +64,18 @@
             this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.libraryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.instructionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.loadedThreadList = new System.Windows.Forms.ListBox();
+            this.threadBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabContainer.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.libraryResultsProcessorBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.librariesBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.threadBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox1
@@ -337,31 +340,32 @@
             this.tableLayoutPanel1.Controls.Add(this.loadedLibraryList, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.processInstructionFileButton, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.resultsGridView, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.loadedThreadList, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1248, 360);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // loadedLibraryList
             // 
-            this.loadedLibraryList.DataSource = this.libraryResultsProcessorBindingSource;
+            this.loadedLibraryList.DataSource = this.librariesBindingSource;
             this.loadedLibraryList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.loadedLibraryList.FormattingEnabled = true;
             this.loadedLibraryList.Location = new System.Drawing.Point(659, 36);
             this.loadedLibraryList.Name = "loadedLibraryList";
             this.loadedLibraryList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.loadedLibraryList.Size = new System.Drawing.Size(586, 321);
+            this.loadedLibraryList.Size = new System.Drawing.Size(586, 157);
             this.loadedLibraryList.TabIndex = 2;
             this.loadedLibraryList.SelectedValueChanged += new System.EventHandler(this.loadedLibraryList_SelectedValueChanged);
             // 
-            // libraryResultsProcessorBindingSource
+            // librariesBindingSource
             // 
-            this.libraryResultsProcessorBindingSource.DataSource = typeof(MemoryPINGui.LibraryResultsProcessor);
+            this.librariesBindingSource.DataSource = typeof(MemoryPINGui.LibraryResultsProcessor);
             // 
             // processInstructionFileButton
             // 
@@ -391,6 +395,8 @@
             this.resultsGridView.Location = new System.Drawing.Point(3, 36);
             this.resultsGridView.Name = "resultsGridView";
             this.resultsGridView.ReadOnly = true;
+            this.resultsGridView.RowHeadersVisible = false;
+            this.tableLayoutPanel1.SetRowSpan(this.resultsGridView, 2);
             this.resultsGridView.Size = new System.Drawing.Size(650, 321);
             this.resultsGridView.TabIndex = 3;
             // 
@@ -436,6 +442,18 @@
             // 
             this.instructionBindingSource.DataSource = typeof(MemoryPINGui.Instruction);
             // 
+            // loadedThreadList
+            // 
+            this.loadedThreadList.DataSource = this.threadBindingSource;
+            this.loadedThreadList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.loadedThreadList.FormattingEnabled = true;
+            this.loadedThreadList.Location = new System.Drawing.Point(659, 199);
+            this.loadedThreadList.Name = "loadedThreadList";
+            this.loadedThreadList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.loadedThreadList.Size = new System.Drawing.Size(586, 158);
+            this.loadedThreadList.TabIndex = 4;
+            this.loadedThreadList.SelectedValueChanged += new System.EventHandler(this.loadedThreadList_SelectedValueChanged);
+            // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
@@ -455,9 +473,10 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.libraryResultsProcessorBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.librariesBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.threadBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -489,7 +508,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button processInstructionFileButton;
-        private System.Windows.Forms.BindingSource libraryResultsProcessorBindingSource;
+        private System.Windows.Forms.BindingSource librariesBindingSource;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.ListBox loadedLibraryList;
         private System.Windows.Forms.BindingSource instructionBindingSource;
@@ -499,6 +518,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn threadidDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn libraryDataGridViewTextBoxColumn;
+        private System.Windows.Forms.ListBox loadedThreadList;
+        private System.Windows.Forms.BindingSource threadBindingSource;
     }
 }
 
