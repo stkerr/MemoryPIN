@@ -43,20 +43,81 @@ namespace MemoryPINGui
         }
     }
 
-    class LibraryResultsProcessor
+    public class LibraryResultsProcessor
     {
-        string filename;
-        FileStream filestream;
-
         Dictionary<string, Interval> libraries_string_interval;
         Dictionary<Interval, string> libraries_interval_string;
 
+        IList<Library> libraries;
+
+        public IList<Library> Libraries
+        {
+            get { return libraries; }
+            set { libraries = value; }
+        }
+
         public LibraryResultsProcessor(string filename)
         {
-            this.filename = filename;
-            this.filestream = new FileStream(filename, FileMode.Open);
+            libraries = new List<Library>();
             libraries_string_interval = new Dictionary<string,Interval>();
             libraries_interval_string = new Dictionary<Interval, string>();
+
+            using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine();
+                        string[] entries = line.Split(new char[] { '|' });
+                        Library library = new Library();
+                        foreach (string s in entries)
+                        {
+                            string[] keyvalue = s.Split(new char[] { ':' });
+                            if (keyvalue.Length < 2)
+                                continue;
+                            if (keyvalue.Length > 2)
+                            {
+                                // there is a colon besides the field delimeter
+                                for (int i = 2; i < keyvalue.Length; i++)
+                                {
+                                    keyvalue[1] += keyvalue[i];
+                                }
+                            }
+
+                            keyvalue[0] = keyvalue[0].Trim();
+                            keyvalue[1] = keyvalue[1].Trim();
+
+                            switch (keyvalue[0])
+                            {
+                                case "Library Name":
+                                    library.Name = keyvalue[1].Trim();
+                                    break;
+                                case "Start Address":
+                                    int addr;
+                                    if (int.TryParse(keyvalue[1], out addr))
+                                    {
+                                        library.Loadaddress = (uint)addr;
+                                        library.Originaladdress = (uint)addr;
+                                    }
+                                    else
+                                    {
+                                        library.Loadaddress = 0;
+                                        library.Originaladdress= 0;
+                                    }
+                                    break;
+                                case "End Address":
+                                    break;
+                                case "Entry Address":
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        Libraries.Add(library);
+                    }
+                }
+            }
         }
 
         public bool AddLibraryRange(string libraryname, int startAddress, int endAddress)

@@ -56,6 +56,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.loadedLibraryList = new System.Windows.Forms.ListBox();
             this.libraryListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.librariesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.processInstructionFileButton = new System.Windows.Forms.Button();
             this.resultsGridView = new System.Windows.Forms.DataGridView();
@@ -68,7 +69,6 @@
             this.loadedThreadList = new System.Windows.Forms.ListBox();
             this.threadBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabContainer.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -362,7 +362,7 @@
             this.loadedLibraryList.FormattingEnabled = true;
             this.loadedLibraryList.Location = new System.Drawing.Point(659, 36);
             this.loadedLibraryList.Name = "loadedLibraryList";
-            this.loadedLibraryList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.loadedLibraryList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.loadedLibraryList.Size = new System.Drawing.Size(586, 157);
             this.loadedLibraryList.TabIndex = 2;
             this.loadedLibraryList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.loadedLibraryList_MouseClick);
@@ -374,7 +374,14 @@
             this.libraryListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1});
             this.libraryListContextMenu.Name = "libraryListContextMenu";
-            this.libraryListContextMenu.Size = new System.Drawing.Size(153, 48);
+            this.libraryListContextMenu.Size = new System.Drawing.Size(151, 26);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(150, 22);
+            this.toolStripMenuItem1.Text = "Library Rebase";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // librariesBindingSource
             // 
@@ -470,12 +477,6 @@
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItem1.Text = "Library Rebase";
             // 
             // Form1
             // 

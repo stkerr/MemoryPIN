@@ -16,28 +16,37 @@ namespace MemoryPINGui
             get { return name; }
             set { name = value; }
         }
-        int loadaddress;
+        
+        uint loadaddress;
 
-        public int Loadaddress
+        public uint Loadaddress
         {
             get { return loadaddress; }
             set { loadaddress = value; }
         }
-        int originaladdress;
+        
+        uint originaladdress;
 
-        public int Originaladdress
+        public uint Originaladdress
         {
             get { return originaladdress; }
             set { originaladdress = value; }
         }
     }
 
-    public class Instruction : DataGridViewTextBoxColumn
+    public class Instruction
     {
-        int address;
+        uint address_traced; // the address we got from the trace file
+
+        public uint Address_traced
+        {
+            get { return address_traced; }
+            set { address_traced = value; }
+        }
+        uint address; // the value calculated with rebasing
         Library library;
-        int threadid;
-        int tickcount;
+        uint threadid;
+        uint tickcount;
         int instructionnumber;
         string libraryName;
 
@@ -53,13 +62,13 @@ namespace MemoryPINGui
             set { instructionnumber = value; }
         }
 
-        public int Time
+        public uint Time
         {
             get { return tickcount; }
             set { tickcount = value; }
         }
 
-        public int Threadid
+        public uint Threadid
         {
             get { return threadid; }
             set { threadid = value; }
@@ -71,15 +80,15 @@ namespace MemoryPINGui
             set { library = value; }
         }
 
-        public int Address
+        public uint Address
         {
             get { return address; }
             set { address = value; }
         }
 
-        public Instruction(int address, string library, int threadid, int instructionnumber, int tickcount)
+        public Instruction(uint address, string library, uint threadid, int instructionnumber, uint tickcount)
         {
-            this.Address = address;
+            this.Address = this.Address_traced = address;
             this.Library = null;
             this.Threadid = threadid;
             this.Instructionnumber = instructionnumber;
@@ -89,9 +98,9 @@ namespace MemoryPINGui
 
         public Instruction()
         {
-            this.Address = 0;
+            this.Address = this.Address_traced = 0;
             this.Library = new Library();
-            this.Threadid = -1;
+            this.Threadid = 0;
             this.Instructionnumber = -1;
             this.Time = 0;
         }
@@ -102,11 +111,11 @@ namespace MemoryPINGui
      * Responsible for parsiong and managing information from an instruction trace log. 
      */
     class InstructionProcessor
-    {
+    {        
         IList<Instruction> instructions;
-        IList<string> libraries;
-        private List<string> includedLibraries;
-
+        IList<Library> libraries; // all libraries
+        private List<string> includedLibraries; // a list of libraries to render 
+        
         IDictionary<string, int> libraryOffsetDictionary;
 
         public IDictionary<string, int> LibraryOffsetDictionary
@@ -136,7 +145,7 @@ namespace MemoryPINGui
             set { includedLibraries = value; }
         }
 
-        public IList<string> Libraries
+        public IList<Library> Libraries
         {
             get { return libraries; }
             set { libraries = value; }
@@ -148,15 +157,12 @@ namespace MemoryPINGui
             {
                 // remove any filtered libraries
 
-                IList<Instruction> results = instructions.Where(x => includedLibraries.Contains(x.LibraryName) && includedThreads.Contains(x.Threadid)).ToList<Instruction>();
+                IList<Instruction> results = instructions.Where(x => includedLibraries.Contains(x.LibraryName) && includedThreads.Contains((int)x.Threadid)).ToList<Instruction>();
                 
                 // go through and adjust any instructions that have modified load addresses
                 foreach(Instruction i in results)
                 {
-                    if(libraryOffsetDictionary.ContainsKey(i.Library.Name))
-                    {
-                        i.Address = i.Address - i.Library.Loadaddress + i.Library.Originaladdress;
-                    }
+                    i.Address = i.Address_traced - i.Library.Loadaddress + i.Library.Originaladdress;
                 }
                 
                 return results;
@@ -164,9 +170,9 @@ namespace MemoryPINGui
             set { instructions = value; }
         }
 
-        public InstructionProcessor(string filename)
+        public InstructionProcessor(string filename, IList<Library> libraries)
         {
-            Libraries = new List<string>();
+            this.libraries = libraries;
             instructions = new List<Instruction>();
             includedLibraries = new List<string>();
             threads = new List<int>();
@@ -175,7 +181,7 @@ namespace MemoryPINGui
 
             StreamReader instructionfile = new StreamReader(filename);
 
-            using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 using (StreamReader sr = new StreamReader(fs))
                 {
@@ -207,27 +213,35 @@ namespace MemoryPINGui
                                     int id;
                                     if (Int32.TryParse(keyvalue[1], out id))
                                     {
-                                        instr.Threadid = id;
+                                        instr.Threadid = (uint)id;
                                         if (!Threads.Contains(id))
                                             Threads.Add(id);
                                     }
                                     else
-                                        instr.Threadid = -1;
+                                        instr.Threadid = 0;
                                     break;
                                 case "Instruction Address":
                                     int addr;
                                     if (int.TryParse(keyvalue[1], out addr))
                                     {
-                                        instr.Address = addr;
-                                        instr.Library.Loadaddress = instr.Library.Originaladdress = addr;
+                                        instr.Address = instr.Address_traced = (uint)addr;
                                     }
                                     else
-                                        instr.Address = -1;
+                                        instr.Address = instr.Address_traced = 0;
                                     break;
                                 case "Library Name":
-                                    if(!libraries.Contains(keyvalue[1].Trim()))
-                                        libraries.Add(keyvalue[1].Trim());
+                                    if (libraries.Where(x => x.Name.Equals(keyvalue[1].Trim())).ToList().Count == 0)
+                                    {
+                                        throw new InvalidDataException("Somehow executed a non-loaded library!");
+                                        //libraries.Add(keyvalue[1].Trim());
+                                    }
+                                    List<Library> lib = libraries.Where(x => x.Name.Equals(keyvalue[1].Trim())).ToList();
+                                    instr.Library = lib.First();
+                                    /*
+                                    instr.Library.Loadaddress = lib.First().Loadaddress;
+                                    instr.Library.Originaladdress = lib.First().Originaladdress;
                                     instr.Library.Name = keyvalue[1].Trim();
+                                     */
                                     break;
                                 case "Instruction Count":
                                     int count;
@@ -239,7 +253,7 @@ namespace MemoryPINGui
                                 case "Time":
                                     int time;
                                     if (Int32.TryParse(keyvalue[1], out time))
-                                        instr.Time = time;
+                                        instr.Time = (uint)time;
                                     else
                                         instr.Instructionnumber = -1;
                                     break;

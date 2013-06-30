@@ -46,6 +46,8 @@ namespace MemoryPINGui
         IntPtr hMonitoringEvent;
         IntPtr hSnapshotEvent;
 
+        LibraryResultsProcessor libraryProcessor;
+
         public Form1()
         {
             hMonitoringEvent = OpenEvent(0x000F0000 | 0x00100000 | 0x03, false, "MonitoringEvent"); // EVENT_ALL_ACCESS
@@ -317,9 +319,10 @@ namespace MemoryPINGui
 
         private void processInstructionFileButton_Click(object sender, EventArgs e)
         {
-            processor = new InstructionProcessor("instructionTrace.txt");
+            libraryProcessor = new LibraryResultsProcessor("memorypin.txt");
+            processor = new InstructionProcessor("instructionTrace.txt", libraryProcessor.Libraries);
 
-            librariesBindingSource.DataSource = processor.Libraries;
+            librariesBindingSource.DataSource = processor.Libraries.Select(x => x.Name);
             instructionBindingSource.DataSource = processor.Instructions;
             threadBindingSource.DataSource = processor.Threads;
 
@@ -332,6 +335,8 @@ namespace MemoryPINGui
             {
                 loadedThreadList.SetSelected(i, true); // select all threads initially
             }
+
+            
         }
 
         private void resultsPageActive(object sender, EventArgs e)
@@ -394,6 +399,13 @@ namespace MemoryPINGui
             {
                 // open some options on right click
             }
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            LibraryRebaseForm rebaseForm = new LibraryRebaseForm(ref libraryProcessor);
+            rebaseForm.ShowDialog();
+            resultsGridView.DataSource = processor.Instructions;
         }
     }
 }

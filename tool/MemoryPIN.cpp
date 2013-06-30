@@ -208,14 +208,17 @@ void ImageLoadedFunction(IMG img, void* data)
 	if(KnobLibraryLoadTrace.Value())
 	{
 		//printf("Image loaded\n");
+		fprintf(resultsFile, "Library Name: %s|Start Address: %d|End Address: %d|Entry Address: %d\n", IMG_Name(img).c_str(), (int)IMG_LowAddress(img), (int)IMG_HighAddress(img), (int)IMG_Entry(img));
+		/*
 		fprintf(resultsFile, "------\n");
 		fprintf(resultsFile, "Loading Image: %s\n", IMG_Name(img).c_str());
 		fprintf(resultsFile, "\tLoading Location:\n");
 		fprintf(resultsFile, "\t0x%08x to 0x%08x\n", (int)IMG_LowAddress(img), (int)IMG_HighAddress(img));
 		fprintf(resultsFile, "\tFirst Instruction address: 0x%08x\n", (int)IMG_Entry(img));
+		*/
 		//fprintf(resultsFile, "\tFirst Section: 0x%08x\n", (int)IMG_SecHead(img));
 		//fprintf(resultsFile, "\tLast Section: 0x%08x\n", (int)IMG_SecTail(img));
-		fprintf(resultsFile, "------\n");
+		//fprintf(resultsFile, "------\n");
 		fflush(resultsFile);
 	}
     boost::icl::discrete_interval<int> itv = boost::icl::discrete_interval<int>::right_open(
