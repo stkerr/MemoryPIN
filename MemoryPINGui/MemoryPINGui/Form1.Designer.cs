@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.regionMonitorCheckBox = new System.Windows.Forms.CheckBox();
@@ -46,7 +46,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabContainer = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.traceOnStartCheckbox = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.snapshotStatusLabel = new System.Windows.Forms.Label();
             this.tracingStatusLabel = new System.Windows.Forms.Label();
@@ -233,7 +233,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.checkBox1);
+            this.tabPage1.Controls.Add(this.traceOnStartCheckbox);
             this.tabPage1.Controls.Add(this.textBox1);
             this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Controls.Add(this.memoryPINDllPath);
@@ -256,16 +256,15 @@
             this.tabPage1.Text = "Configuration Page";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // traceOnStartCheckbox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(150, 153);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(190, 17);
-            this.checkBox1.TabIndex = 13;
-            this.checkBox1.Text = "Enable Instruction Tracing on Start";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
+            this.traceOnStartCheckbox.AutoSize = true;
+            this.traceOnStartCheckbox.Location = new System.Drawing.Point(150, 153);
+            this.traceOnStartCheckbox.Name = "traceOnStartCheckbox";
+            this.traceOnStartCheckbox.Size = new System.Drawing.Size(190, 17);
+            this.traceOnStartCheckbox.TabIndex = 13;
+            this.traceOnStartCheckbox.Text = "Enable Instruction Tracing on Start";
+            this.traceOnStartCheckbox.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -430,9 +429,9 @@
             // addressDataGridViewTextBoxColumn
             // 
             this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
-            dataGridViewCellStyle1.Format = "X08";
-            dataGridViewCellStyle1.NullValue = "0";
-            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Format = "X08";
+            dataGridViewCellStyle2.NullValue = "0";
+            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
             this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
             this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
             this.addressDataGridViewTextBoxColumn.ReadOnly = true;
@@ -523,7 +522,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button startManualTracingButton;
         private System.Windows.Forms.Button snapshotButton;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox traceOnStartCheckbox;
         private System.Windows.Forms.Label snapshotStatusLabel;
         private System.Windows.Forms.Label tracingStatusLabel;
         private System.Windows.Forms.Timer timer1;

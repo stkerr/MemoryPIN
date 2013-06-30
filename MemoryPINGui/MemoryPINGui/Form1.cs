@@ -139,6 +139,12 @@ namespace MemoryPINGui
                 
             }
 
+            if (traceOnStartCheckbox.Checked)
+            {
+                // enable tracing before we start executing
+                SetEvent(hMonitoringEvent);
+            }
+
             paramString += " -- " + textBox1.Text;
 
             tabContainer.SelectTab(1); // switch to control tab
@@ -196,18 +202,6 @@ namespace MemoryPINGui
                 return;
             }
 
-            if (instructionTracingCheckbox.Checked == true && instructionTracing == false)
-            {
-                SetEvent(hMonitoringEvent);
-                startManualTracingButton.Text = "Disable Tracing";
-                instructionTracing = !instructionTracing;
-            }
-            else if (instructionTracingCheckbox.Checked == false && instructionTracing == true)
-            {
-                ResetEvent(hMonitoringEvent);
-                startManualTracingButton.Text = "Enable Tracing";
-                instructionTracing = !instructionTracing;
-            }
         }
 
         private void snapshotButton_Click(object sender, EventArgs e)
@@ -219,20 +213,6 @@ namespace MemoryPINGui
 
             SetEvent(hSnapshotEvent);
 
-        }
-
-        private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
-        {
-            if (hMonitoringEvent == null)
-            {
-                return;
-            }
-
-            if (instructionTracing == false)
-            {
-                SetEvent(hMonitoringEvent);
-                startManualTracingButton.Text = "Disable Tracing";
-            }
         }
 
         private void tracingStatusLabel_Paint(object sender, PaintEventArgs e)

@@ -47,7 +47,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 72.05082F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 27.94918F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 192F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 193F));
             this.tableLayoutPanel1.Controls.Add(this.libraryLoadLocationLabel, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.libraryOriginalLocationLabel, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.libraryLoadingLocationTextBox, 2, 0);
@@ -69,7 +69,7 @@
             // 
             this.libraryLoadLocationLabel.AutoSize = true;
             this.libraryLoadLocationLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.libraryLoadLocationLabel.Location = new System.Drawing.Point(417, 0);
+            this.libraryLoadLocationLabel.Location = new System.Drawing.Point(416, 0);
             this.libraryLoadLocationLabel.Name = "libraryLoadLocationLabel";
             this.libraryLoadLocationLabel.Size = new System.Drawing.Size(154, 122);
             this.libraryLoadLocationLabel.TabIndex = 0;
@@ -79,7 +79,7 @@
             // 
             this.libraryOriginalLocationLabel.AutoSize = true;
             this.libraryOriginalLocationLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.libraryOriginalLocationLabel.Location = new System.Drawing.Point(417, 122);
+            this.libraryOriginalLocationLabel.Location = new System.Drawing.Point(416, 122);
             this.libraryOriginalLocationLabel.Name = "libraryOriginalLocationLabel";
             this.libraryOriginalLocationLabel.Size = new System.Drawing.Size(154, 122);
             this.libraryOriginalLocationLabel.TabIndex = 1;
@@ -88,18 +88,18 @@
             // libraryLoadingLocationTextBox
             // 
             this.libraryLoadingLocationTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.libraryLoadingLocationTextBox.Location = new System.Drawing.Point(577, 3);
+            this.libraryLoadingLocationTextBox.Location = new System.Drawing.Point(576, 3);
             this.libraryLoadingLocationTextBox.Name = "libraryLoadingLocationTextBox";
             this.libraryLoadingLocationTextBox.ReadOnly = true;
-            this.libraryLoadingLocationTextBox.Size = new System.Drawing.Size(187, 20);
+            this.libraryLoadingLocationTextBox.Size = new System.Drawing.Size(188, 20);
             this.libraryLoadingLocationTextBox.TabIndex = 2;
             // 
             // libraryOriginalLocationTextBox
             // 
             this.libraryOriginalLocationTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.libraryOriginalLocationTextBox.Location = new System.Drawing.Point(577, 125);
+            this.libraryOriginalLocationTextBox.Location = new System.Drawing.Point(576, 125);
             this.libraryOriginalLocationTextBox.Name = "libraryOriginalLocationTextBox";
-            this.libraryOriginalLocationTextBox.Size = new System.Drawing.Size(187, 20);
+            this.libraryOriginalLocationTextBox.Size = new System.Drawing.Size(188, 20);
             this.libraryOriginalLocationTextBox.TabIndex = 3;
             // 
             // libraryNameListBox
@@ -110,16 +110,16 @@
             this.libraryNameListBox.Location = new System.Drawing.Point(3, 3);
             this.libraryNameListBox.Name = "libraryNameListBox";
             this.tableLayoutPanel1.SetRowSpan(this.libraryNameListBox, 3);
-            this.libraryNameListBox.Size = new System.Drawing.Size(408, 266);
+            this.libraryNameListBox.Size = new System.Drawing.Size(407, 266);
             this.libraryNameListBox.TabIndex = 4;
             this.libraryNameListBox.SelectedValueChanged += new System.EventHandler(this.libraryNameListBox_SelectedValueChanged);
             // 
             // libraryUpdateButton
             // 
             this.libraryUpdateButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.libraryUpdateButton.Location = new System.Drawing.Point(577, 247);
+            this.libraryUpdateButton.Location = new System.Drawing.Point(576, 247);
             this.libraryUpdateButton.Name = "libraryUpdateButton";
-            this.libraryUpdateButton.Size = new System.Drawing.Size(187, 22);
+            this.libraryUpdateButton.Size = new System.Drawing.Size(188, 22);
             this.libraryUpdateButton.TabIndex = 5;
             this.libraryUpdateButton.Text = "Update Original Location";
             this.libraryUpdateButton.UseVisualStyleBackColor = true;
@@ -129,7 +129,7 @@
             // 
             this.statusLabel.AutoSize = true;
             this.statusLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.statusLabel.Location = new System.Drawing.Point(417, 244);
+            this.statusLabel.Location = new System.Drawing.Point(416, 244);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(154, 28);
             this.statusLabel.TabIndex = 6;
