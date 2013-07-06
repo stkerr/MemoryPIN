@@ -330,6 +330,15 @@ void memoryMonitorFunction(INS ins, void* region)
 	}
 }
 
+void finishFunction(int code, void* data)
+{
+	if(resultsFile != 0)
+		fclose(resultsFile);
+
+	if(instructionLogFile != 0)
+		fclose(instructionLogFile);
+}
+
 /*!
  * The main procedure of the tool.
  * This function is called when the application image is loaded but not yet started.
@@ -390,6 +399,8 @@ int main(int argc, char *argv[])
 
     	fprintf(resultsFile, "Monitoring 0x%08x to 0x%08x\n",KnobStartRegion.Value(), KnobEndRegion.Value());
     }
+
+    PIN_AddFiniFunction(finishFunction, 0);
 
     // Start the program, never returns
     PIN_StartProgram();

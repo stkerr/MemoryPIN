@@ -78,6 +78,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="Properties\DataSources\Form1.datasource" />
+    <None Include="Properties\DataSources\HistogramEntry.datasource" />
     <None Include="Properties\DataSources\Instruction.datasource" />
     <None Include="Properties\DataSources\InstructionProcessor.datasource" />
     <None Include="Properties\DataSources\Interval.datasource" />

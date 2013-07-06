@@ -7,6 +7,46 @@ using System.Windows.Forms;
 
 namespace MemoryPINGui
 {
+    public class HistogramEntry : IComparable<HistogramEntry>
+    {
+        uint address;
+
+        public uint Address
+        {
+            get { return address; }
+            set { address = value; }
+        }
+        uint count;
+
+        public uint Count
+        {
+            get { return count; }
+            set { count = value; }
+        }
+
+        public HistogramEntry(uint addr, uint count)
+        {
+            this.Address = addr;
+            this.Count = count;
+        }
+
+        /*
+        public int CompareTo(HistogramEntry other)
+        {
+            if (this.Address == other.Address) return 0;
+            else if (this.Address < other.Address) return -1;
+            else return 1;
+        }
+        */
+
+        public int CompareTo(HistogramEntry other)
+        {
+            if (this.Count == other.Count) return 0;
+            else if (this.Count < other.Count) return -1;
+            else return 1;
+        }
+    }
+
     public class Library
     {
         string name;
@@ -179,8 +219,6 @@ namespace MemoryPINGui
             includedThreads = new List<int>();
             libraryOffsetDictionary = new Dictionary<string, int>();
 
-            StreamReader instructionfile = new StreamReader(filename);
-
             using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 using (StreamReader sr = new StreamReader(fs))
@@ -216,6 +254,8 @@ namespace MemoryPINGui
                                         instr.Threadid = (uint)id;
                                         if (!Threads.Contains(id))
                                             Threads.Add(id);
+                                        if (!IncludedThreads.Contains(id))
+                                            IncludedThreads.Add(id);
                                     }
                                     else
                                         instr.Threadid = 0;
@@ -232,11 +272,18 @@ namespace MemoryPINGui
                                 case "Library Name":
                                     if (libraries.Where(x => x.Name.Equals(keyvalue[1].Trim())).ToList().Count == 0)
                                     {
-                                        throw new InvalidDataException("Somehow executed a non-loaded library!");
-                                        //libraries.Add(keyvalue[1].Trim());
+                                        //throw new InvalidDataException("Somehow executed a non-loaded library!");
+                                        Library strange = new Library();
+                                        strange.Name = "(!) " + keyvalue[1].Trim();
+                                        libraries.Add(strange);
                                     }
                                     List<Library> lib = libraries.Where(x => x.Name.Equals(keyvalue[1].Trim())).ToList();
-                                    instr.Library = lib.First();
+                                    if(lib.Count != 0)
+                                        instr.Library = lib.First();
+                                    if (!IncludedLibraries.Contains(keyvalue[1]))
+                                    {
+                                        IncludedLibraries.Add(keyvalue[1]);
+                                    }
                                     /*
                                     instr.Library.Loadaddress = lib.First().Loadaddress;
                                     instr.Library.Originaladdress = lib.First().Originaladdress;

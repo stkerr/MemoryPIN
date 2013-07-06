@@ -51,7 +51,7 @@ namespace MemoryPINGui
         public Form1()
         {
             hMonitoringEvent = OpenEvent(0x000F0000 | 0x00100000 | 0x03, false, "MonitoringEvent"); // EVENT_ALL_ACCESS
-            if(hMonitoringEvent.ToInt32() == 0)
+            if (hMonitoringEvent.ToInt32() == 0)
             {
                 int error = GetLastError();
                 if (error == 2)
@@ -61,7 +61,7 @@ namespace MemoryPINGui
                 }
             }
             hSnapshotEvent = OpenEvent(0x000F0000 | 0x00100000 | 0x03, false, "SnapshotEvent"); // EVENT_ALL_ACCESS
-            if(hSnapshotEvent.ToInt32() == 0)
+            if (hSnapshotEvent.ToInt32() == 0)
             {
                 int error = GetLastError();
                 if (error == 2)
@@ -95,7 +95,7 @@ namespace MemoryPINGui
             string[] droppedFilename = e.Data.GetData(DataFormats.FileDrop, true) as string[];
             fileOfInterest = droppedFilename[0];
             textBox1.Text = droppedFilename[0];
-            
+
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -132,11 +132,11 @@ namespace MemoryPINGui
                     uint regionEnd = Convert.ToUInt32(regionEndBox.Text, 16);
                     paramString += " -monitorRegion -startRegion " + regionStart + " -endRegion " + regionEnd + " ";
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show("Invalid region parameters! Please enter hex values.");
                 }
-                
+
             }
 
             if (traceOnStartCheckbox.Checked)
@@ -149,8 +149,8 @@ namespace MemoryPINGui
 
             tabContainer.SelectTab(1); // switch to control tab
 
-            ProcessStartInfo psi = new ProcessStartInfo(pinPathBox.Text);
-            psi.Arguments = paramString;
+            ProcessStartInfo psi = new ProcessStartInfo("cmd.exe");
+            psi.Arguments = "/K " + pinPathBox.Text + " " + paramString;
             psi.UseShellExecute = false;
             Process.Start(psi);
         }
@@ -316,7 +316,7 @@ namespace MemoryPINGui
                 loadedThreadList.SetSelected(i, true); // select all threads initially
             }
 
-            
+
         }
 
         private void resultsPageActive(object sender, EventArgs e)
@@ -328,7 +328,7 @@ namespace MemoryPINGui
         {
             timer1.Start();
         }
-        
+
         private void loadedLibraryList_SelectedValueChanged(object sender, EventArgs e)
         {
             if (processor == null || processor.Libraries.Count == 0)
@@ -336,7 +336,7 @@ namespace MemoryPINGui
 
             // refresh all the filtered libraries
             processor.IncludedLibraries.RemoveAll(x => x != null);
-            foreach(string item in loadedLibraryList.SelectedItems)
+            foreach (string item in loadedLibraryList.SelectedItems)
             {
                 if (!processor.IncludedLibraries.Contains(item))
                     processor.IncludedLibraries.Add(item);
@@ -365,7 +365,7 @@ namespace MemoryPINGui
 
         private void loadedLibraryList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(loadedLibraryList.Items.Count == 0)
+            if (loadedLibraryList.Items.Count == 0)
             {
                 return;
             }
@@ -374,7 +374,7 @@ namespace MemoryPINGui
 
         private void loadedLibraryList_MouseClick(object sender, MouseEventArgs e)
         {
-            
+
             if (e.Button == MouseButtons.Right)
             {
                 // open some options on right click
@@ -386,6 +386,51 @@ namespace MemoryPINGui
             LibraryRebaseForm rebaseForm = new LibraryRebaseForm(ref libraryProcessor);
             rebaseForm.ShowDialog();
             resultsGridView.DataSource = processor.Instructions;
+        }
+
+        private void tabContainer_TabIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void histogramData_Enter(object sender, EventArgs e)
+        {
+            if(libraryProcessor == null)
+                libraryProcessor = new LibraryResultsProcessor("memorypin.txt");
+            if(processor == null)
+                processor = new InstructionProcessor("instructionTrace.txt", libraryProcessor.Libraries);
+
+            IList<Instruction> instrs = processor.Instructions;
+
+
+            Dictionary<uint, uint> histogram = new Dictionary<uint, uint>(); ; // <instruction address, count>
+
+
+            foreach (Instruction i in instrs)
+            {
+                if (histogram.ContainsKey(i.Address) == false)
+                {
+                    histogram.Add(i.Address, 1);
+                }
+                else
+                {
+                    histogram[i.Address]++;
+                }
+            }
+
+            List<HistogramEntry> convertedHistogram = new List<HistogramEntry>();
+            foreach (uint key in histogram.Keys)
+            {
+                convertedHistogram.Add(new HistogramEntry(key, histogram[key]));
+            }
+
+            convertedHistogram.Sort();
+            convertedHistogram.Reverse();
+
+            histogramDataView.DataSource = convertedHistogram;
+            histogramDataView.DefaultCellStyle.Format = "X08";
+
+
         }
     }
 }

@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.histogramEntryBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.histogramEntryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.regionMonitorCheckBox = new System.Windows.Forms.CheckBox();
@@ -68,7 +70,14 @@
             this.instructionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.loadedThreadList = new System.Windows.Forms.ListBox();
             this.threadBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.histogramDataView = new System.Windows.Forms.DataGridView();
+            this.addressDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.histogramBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource)).BeginInit();
             this.tabContainer.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -79,7 +88,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.threadBindingSource)).BeginInit();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.histogramDataView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.histogramBindingSource)).BeginInit();
             this.SuspendLayout();
+            // 
+            // histogramEntryBindingSource1
+            // 
+            this.histogramEntryBindingSource1.DataSource = typeof(MemoryPINGui.HistogramEntry);
             // 
             // textBox1
             // 
@@ -223,6 +239,7 @@
             this.tabContainer.Controls.Add(this.tabPage1);
             this.tabContainer.Controls.Add(this.tabPage2);
             this.tabContainer.Controls.Add(this.tabPage3);
+            this.tabContainer.Controls.Add(this.tabPage4);
             this.tabContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabContainer.Location = new System.Drawing.Point(0, 0);
             this.tabContainer.Name = "tabContainer";
@@ -230,6 +247,7 @@
             this.tabContainer.SelectedIndex = 0;
             this.tabContainer.Size = new System.Drawing.Size(1262, 392);
             this.tabContainer.TabIndex = 14;
+            this.tabContainer.TabIndexChanged += new System.EventHandler(this.tabContainer_TabIndexChanged);
             // 
             // tabPage1
             // 
@@ -429,9 +447,9 @@
             // addressDataGridViewTextBoxColumn
             // 
             this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
-            dataGridViewCellStyle2.Format = "X08";
-            dataGridViewCellStyle2.NullValue = "0";
-            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Format = "X08";
+            dataGridViewCellStyle1.NullValue = "0";
+            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
             this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
             this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
             this.addressDataGridViewTextBoxColumn.ReadOnly = true;
@@ -473,6 +491,50 @@
             this.loadedThreadList.TabIndex = 4;
             this.loadedThreadList.SelectedValueChanged += new System.EventHandler(this.loadedThreadList_SelectedValueChanged);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.histogramDataView);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1254, 366);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Histogram";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPage4.Enter += new System.EventHandler(this.histogramData_Enter);
+            // 
+            // histogramDataView
+            // 
+            this.histogramDataView.AllowUserToAddRows = false;
+            this.histogramDataView.AllowUserToDeleteRows = false;
+            this.histogramDataView.AllowUserToOrderColumns = true;
+            this.histogramDataView.AutoGenerateColumns = false;
+            this.histogramDataView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.histogramDataView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.addressDataGridViewTextBoxColumn1,
+            this.countDataGridViewTextBoxColumn});
+            this.histogramDataView.DataSource = this.histogramEntryBindingSource1;
+            this.histogramDataView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.histogramDataView.Location = new System.Drawing.Point(3, 3);
+            this.histogramDataView.Name = "histogramDataView";
+            this.histogramDataView.ReadOnly = true;
+            this.histogramDataView.Size = new System.Drawing.Size(1248, 360);
+            this.histogramDataView.TabIndex = 0;
+            // 
+            // addressDataGridViewTextBoxColumn1
+            // 
+            this.addressDataGridViewTextBoxColumn1.DataPropertyName = "Address";
+            this.addressDataGridViewTextBoxColumn1.HeaderText = "Address";
+            this.addressDataGridViewTextBoxColumn1.Name = "addressDataGridViewTextBoxColumn1";
+            this.addressDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // countDataGridViewTextBoxColumn
+            // 
+            this.countDataGridViewTextBoxColumn.DataPropertyName = "Count";
+            this.countDataGridViewTextBoxColumn.HeaderText = "Count";
+            this.countDataGridViewTextBoxColumn.Name = "countDataGridViewTextBoxColumn";
+            this.countDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
@@ -485,6 +547,8 @@
             this.Controls.Add(this.tabContainer);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource)).EndInit();
             this.tabContainer.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -497,6 +561,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.threadBindingSource)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.histogramDataView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.histogramBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -542,6 +609,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn LibraryName;
         private System.Windows.Forms.ContextMenuStrip libraryListContextMenu;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.BindingSource histogramBindingSource;
+        private System.Windows.Forms.BindingSource histogramEntryBindingSource;
+        private System.Windows.Forms.BindingSource histogramEntryBindingSource1;
+        private System.Windows.Forms.DataGridView histogramDataView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
     }
 }
 
