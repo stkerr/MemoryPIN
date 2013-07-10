@@ -34,3 +34,7 @@ MemoryPINGui/MemoryPINGui.sdf
 MemoryPINGui/MemoryPINGui.suo
 MemoryPINGui/MemoryPINGui/obj/*
 MemoryPINGui/MemoryPINGui/bin/*
+MemoryPINGui/MemoryPINPostProcessor/Debug/
+MemoryPINGui/NativeProcessor/Debug/
+MemoryPINGui/ipch/memorypinpostprocessor-2c59217e/memorypinpostprocessor-5a7f3392.ipch
+MemoryPINGui/ipch/nativeprocessor-5feb8e00/nativeprocessor-e69b6d13.ipch

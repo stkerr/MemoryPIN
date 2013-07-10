@@ -6,11 +6,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace MemoryPINGui
 {
     public partial class LibraryRebaseForm : Form
     {
+        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
+        internal static extern IntPtr LoadLibrary(string lpLibFileName);
+
         private IList<Library> libraries;
 
         public IList<Library> Libraries
@@ -22,9 +26,13 @@ namespace MemoryPINGui
         public LibraryRebaseForm(ref LibraryResultsProcessor processor)
         {
             InitializeComponent();
-            IList<Library> libraryData = processor.Libraries;
-            this.Libraries = libraryData;
+            this.Libraries = processor.Libraries;
             this.libraryBindingSource.DataSource = this.Libraries.Select(e => e.Name);
+        }
+
+        private void RebaseAllLibraries()
+        {
+
         }
 
         private void libraryNameListBox_SelectedValueChanged(object sender, EventArgs e)

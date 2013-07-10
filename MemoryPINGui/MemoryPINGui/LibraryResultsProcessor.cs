@@ -81,7 +81,7 @@ namespace MemoryPINGui
                                 // there is a colon besides the field delimeter
                                 for (int i = 2; i < keyvalue.Length; i++)
                                 {
-                                    keyvalue[1] += keyvalue[i];
+                                    keyvalue[1] += ":" + keyvalue[i];
                                 }
                             }
 
@@ -92,18 +92,20 @@ namespace MemoryPINGui
                             {
                                 case "Library Name":
                                     library.Name = keyvalue[1].Trim();
+                                    LibraryProcessor libProc = new LibraryProcessor(library.Name);
+                                    library.Originaladdress = (uint)libProc.GetImageBase();
                                     break;
                                 case "Start Address":
                                     int addr;
                                     if (int.TryParse(keyvalue[1], out addr))
                                     {
                                         library.Loadaddress = (uint)addr;
-                                        library.Originaladdress = (uint)addr;
+                                    //    library.Originaladdress = (uint)addr;
                                     }
                                     else
                                     {
                                         library.Loadaddress = 0;
-                                        library.Originaladdress= 0;
+                                    //    library.Originaladdress= 0;
                                     }
                                     break;
                                 case "End Address":

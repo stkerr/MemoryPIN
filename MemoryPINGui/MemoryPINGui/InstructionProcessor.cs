@@ -88,7 +88,6 @@ namespace MemoryPINGui
         uint threadid;
         uint tickcount;
         int instructionnumber;
-        string libraryName;
 
         public string LibraryName
         {
@@ -238,7 +237,7 @@ namespace MemoryPINGui
                                 // there is a colon besides the field delimeter
                                 for (int i = 2; i < keyvalue.Length; i++)
                                 {
-                                    keyvalue[1] += keyvalue[i];
+                                    keyvalue[1] += ":" + keyvalue[i];
                                 }
                             }
 

@@ -41,7 +41,6 @@ namespace MemoryPINGui
 
         string fileOfInterest;
         //string pinPath;
-        bool instructionTracing = false;
 
         IntPtr hMonitoringEvent;
         IntPtr hSnapshotEvent;
@@ -352,7 +351,7 @@ namespace MemoryPINGui
                 return;
 
             // refresh all the filtered libraries
-            processor.IncludedThreads.RemoveAll(x => x != null);
+            processor.IncludedThreads.RemoveAll(x => x != 0);
             foreach (int item in loadedThreadList.SelectedItems)
             {
                 if (!processor.IncludedThreads.Contains(item))
