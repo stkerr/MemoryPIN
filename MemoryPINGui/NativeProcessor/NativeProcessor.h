@@ -10,10 +10,7 @@ public class NativeLibraryProcessor
 
 private:
 	HANDLE hLibrary;
-	IMAGE_DOS_HEADER idh;
-	IMAGE_OPTIONAL_HEADER ioh;
-	IMAGE_IMPORT_DESCRIPTOR iid;
-	_IMAGE_EXPORT_DIRECTORY pExportDescriptor;
+	PIMAGE_NT_HEADERS headers;
 	std::string name;
 
 public:

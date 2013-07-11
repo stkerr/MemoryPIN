@@ -41,6 +41,7 @@
     <None Include="app.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\memorypingui\program.cs" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
