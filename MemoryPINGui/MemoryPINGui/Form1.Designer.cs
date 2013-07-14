@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.histogramEntryBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.histogramEntryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -447,9 +447,9 @@
             // addressDataGridViewTextBoxColumn
             // 
             this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
-            dataGridViewCellStyle1.Format = "X08";
-            dataGridViewCellStyle1.NullValue = "0";
-            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Format = "X08";
+            dataGridViewCellStyle2.NullValue = "0";
+            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
             this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
             this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
             this.addressDataGridViewTextBoxColumn.ReadOnly = true;

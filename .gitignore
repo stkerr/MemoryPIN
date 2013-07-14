@@ -38,3 +38,11 @@ MemoryPINGui/MemoryPINPostProcessor/Debug/
 MemoryPINGui/NativeProcessor/Debug/
 MemoryPINGui/ipch/memorypinpostprocessor-2c59217e/memorypinpostprocessor-5a7f3392.ipch
 MemoryPINGui/ipch/nativeprocessor-5feb8e00/nativeprocessor-e69b6d13.ipch
+MemoryPINGui/OGDFVisuals/Debug/
+MemoryPINGui/OGDFVisuals/ogdf/
+MemoryPINGui/OGDFVisuals/graphviz/
+MemoryPINGui/OGDFVisuals/Release/
+MemoryPINGui/ipch/ogdfvisuals-3f26f1c0/ogdfvisuals-f3f29033.ipch
+MemoryPINGui/ipch/ogdfvisuals-3f26f1c0/ogdfvisuals-2f7a192d.ipch
+MemoryPINGui/NativeProcessor/Release/NativeProcessor.dll.intermediate.manifest
+MemoryPINGui/NativeProcessor/Release/

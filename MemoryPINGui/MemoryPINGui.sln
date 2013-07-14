@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryPINGui", "MemoryPINGu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeProcessor", "NativeProcessor\NativeProcessor.vcxproj", "{F6EF452C-B75F-4658-98A7-9FF0C0780CAA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OGDFVisuals", "OGDFVisuals\OGDFVisuals.vcxproj", "{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -35,6 +37,16 @@ Global
 		{F6EF452C-B75F-4658-98A7-9FF0C0780CAA}.Release|Win32.ActiveCfg = Release|Win32
 		{F6EF452C-B75F-4658-98A7-9FF0C0780CAA}.Release|Win32.Build.0 = Release|Win32
 		{F6EF452C-B75F-4658-98A7-9FF0C0780CAA}.Release|x86.ActiveCfg = Release|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Debug|Win32.Build.0 = Debug|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Debug|x86.ActiveCfg = Debug|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Release|Win32.ActiveCfg = Release|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Release|Win32.Build.0 = Release|Win32
+		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
