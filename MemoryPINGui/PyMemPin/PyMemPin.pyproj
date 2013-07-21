@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{31a249fb-22b3-43c1-85a2-ef7924f7efa7}</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>PyMemPin.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>PyMemPin</Name>
+    <RootNamespace>PyMemPin</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <CommandLineArguments />
+    <InterpreterPath />
+    <DebugStdLib>False</DebugStdLib>
+    <InterpreterArguments />
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AlterLibraryDialog.py" />
+    <Compile Include="PyMemPin.py" />
+    <Compile Include="PyMemPin\DataImporter.py" />
+    <Compile Include="PyMemPin\Instruction.py" />
+    <Compile Include="PyMemPin\Library.py" />
+    <Compile Include="PyMemPin\QtInterface\FlatListModel.py" />
+    <Compile Include="PyMemPin\QtInterface\InstructionModel.py" />
+    <Compile Include="PyMemPin\QtInterface\LibraryModel.py" />
+    <Compile Include="PyMemPin\QtInterface\__init__.py" />
+    <Compile Include="PyMemPin\__init__.py" />
+    <Compile Include="PyQtGui.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PyMemPin\" />
+    <Folder Include="PyMemPin\QtInterface\" />
+    <Folder Include="QtGuis\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="QtGuis\library_alter_gui.ui">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="QtGuis\main_gui.ui">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+</Project>
