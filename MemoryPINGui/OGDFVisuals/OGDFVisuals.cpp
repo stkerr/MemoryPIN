@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "OGDFVisuals.h"
+#include <string>
 
 #define MAX_LOADSTRING 100
 
@@ -27,6 +28,8 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 #include <ogdf/layered/MedianHeuristic.h>
 #include <ogdf/layered/OptimalHierarchyLayout.h>
 #include <ogdf/energybased/FMMMLayout.h>
+#include <ogdf/module/CCLayoutPackModule.h>
+#include <ogdf/planarity/PlanarizationGridLayout.h>
 using namespace ogdf;
 
 
@@ -88,42 +91,76 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	*/
 
 	Graph G;
+	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
+		GraphAttributes::edgeGraphics );
+	GA.initAttributes(GraphAttributes::nodeLabel);
 
 	// generate some random nodes
-	node thenodes[10000];
-	for(int i = 0; i < 10000; i++)
+#define NODECOUNT 12
+#define EDGECOUNT 1500
+	node thenodes[NODECOUNT];
+	for(int i = 0; i < NODECOUNT; i++)
 	{
 		thenodes[i] = G.newNode();
+		std::string s;
+		std::stringstream out;
+		out << i;
+		s = out.str();
+		GA.labelNode(thenodes[i]) = s.c_str();
 	}
 
 	srand(time(0));
-	
-	for(int i = 0; i < 15000; i++)
+	/*
+	for(int i = 0; i < EDGECOUNT; i++)
 	{
-		G.newEdge(thenodes[rand() % 10000], thenodes[rand() % 10000]);
+		G.newEdge(thenodes[rand() % NODECOUNT], thenodes[rand() % NODECOUNT]);
 	}
 
-	GraphAttributes GA(G, GraphAttributes::nodeGraphics |	
-		GraphAttributes::edgeGraphics );
- 
+	*/
+
+	
+	G.newEdge(thenodes[0],thenodes[1]);
+	G.newEdge(thenodes[0],thenodes[11]);
+	G.newEdge(thenodes[1],thenodes[2]);
+	G.newEdge(thenodes[2],thenodes[3]);
+	G.newEdge(thenodes[3],thenodes[4]);
+	G.newEdge(thenodes[4],thenodes[5]);
+	G.newEdge(thenodes[5],thenodes[6]);
+	G.newEdge(thenodes[6],thenodes[7]);
+	G.newEdge(thenodes[7],thenodes[8]);
+	G.newEdge(thenodes[7],thenodes[11]);
+	G.newEdge(thenodes[8],thenodes[9]);
+	G.newEdge(thenodes[9],thenodes[10]);
+	G.newEdge(thenodes[10],thenodes[11]);
+	
 	node v;
 	forall_nodes(v,G)
+	{
 		GA.width(v) = GA.height(v) = 10.0;
+	}
  
+	
+	PlanarizationGridLayout pgl;
+	pgl.call(GA);
+	
+	/*
+	
 	FMMMLayout fmmm;
  
 	fmmm.useHighLevelOptions(true);
 	fmmm.edgeLengthMeasurement(FMMMLayout::EdgeLengthMeasurement::elmBoundingCircle);
-	fmmm.unitEdgeLength(15.0); 
+	//fmmm.unitEdgeLength(150.0); 
 	fmmm.newInitialPlacement(true);
 	fmmm.qualityVersusSpeed(FMMMLayout::qvsNiceAndIncredibleSpeed); // change this for various quality
- 
+	fmmm.minDistCC(50);
 	fmmm.call(GA);
- 
+	*/
+	
+	//GA.writeXML("D:\\Documents\\Code\\MemoryPIN\\MemoryPINGui\\OGDFVisuals\\manual_graph.xml");
 	GA.writeGML("D:\\Documents\\Code\\MemoryPIN\\MemoryPINGui\\OGDFVisuals\\manual_graph.gml");
 	GA.writeSVG("D:\\Documents\\Code\\MemoryPIN\\MemoryPINGui\\OGDFVisuals\\manual_graph.svg");
 
-	
+	return 0;
 	
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);

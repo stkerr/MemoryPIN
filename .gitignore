@@ -48,3 +48,8 @@ MemoryPINGui/NativeProcessor/Release/NativeProcessor.dll.intermediate.manifest
 MemoryPINGui/NativeProcessor/Release/
 librarydataextractor/librarydataextractor/Debug/
 librarysymbolreporter_OLD/librarysymbolreporter/Debug/
+librarydataextractor/Debug/librarydataextractor.idb
+*.pyc
+*~
+*.ipch
+*.sdf

@@ -47,7 +47,7 @@ void ListDLLFunctions(string sADllName, map<string, pair<unsigned int, unsigned 
                 sName = (char *)ImageRvaToVa(LoadedImage.FileHeader, 
                         LoadedImage.MappedAddress,
                        dNameRVAs[i], NULL);
-				slListOfDllFunctions[sName] = pair<unsigned int, unsigned int>(dNameRVAs[i],dNameRVAs[i] + imageBase);
+				slListOfDllFunctions[sName] = pair<unsigned int, unsigned int>(imageBase + dNameRVAs[i],imageBase);
             }
         }
         UnMapAndLoad(&LoadedImage);
