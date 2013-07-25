@@ -28,7 +28,15 @@ class PyQtGui(QtGui.QMainWindow):
         # Load up the alter library dialog and pass along the library information
         alter_library_dialog = AlterLibraryDialog(self.library_data)
 
+        print type(alter_library_dialog)
+
         # Update all the instructions with these new library offsets
+        for i in self.instruction_data:
+
+            # Check the library addresses
+            for l in self.library_data:
+                if i['library'] == l['name']:
+                    i.address = i.original_address - l.address_start + l.address_new_start
 
 
 

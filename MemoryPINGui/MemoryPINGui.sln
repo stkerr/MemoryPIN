@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NativeProcessor", "NativePr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OGDFVisuals", "OGDFVisuals\OGDFVisuals.vcxproj", "{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "IronPyMemPin", "IronPyMemPin\IronPyMemPin.pyproj", "{74AE68D1-BA25-4A5D-AF3C-00B19284A937}"
-EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WpfApplication1", "WpfApplication1\WpfApplication1.pyproj", "{2E6BE971-D3F7-4FF7-9047-02CBD7C40DAC}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PyMemPin", "PyMemPin\PyMemPin.pyproj", "{31A249FB-22B3-43C1-85A2-EF7924F7EFA7}"
@@ -61,18 +59,6 @@ Global
 		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Release|Win32.ActiveCfg = Release|Win32
 		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Release|Win32.Build.0 = Release|Win32
 		{E2B14149-C1AD-4AEC-A049-0CB3841C11D0}.Release|x86.ActiveCfg = Release|Win32
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Release|Any CPU.Build.0 = Release|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Release|Win32.ActiveCfg = Release|Any CPU
-		{74AE68D1-BA25-4A5D-AF3C-00B19284A937}.Release|x86.ActiveCfg = Release|Any CPU
 		{2E6BE971-D3F7-4FF7-9047-02CBD7C40DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E6BE971-D3F7-4FF7-9047-02CBD7C40DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E6BE971-D3F7-4FF7-9047-02CBD7C40DAC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

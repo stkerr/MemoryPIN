@@ -86,6 +86,7 @@ class DataImporter(object):
                     library.name = value
                 elif key == "Start Address":
                     library.address_start = int(value)
+                    library.address_new_start = int(value)
                 elif key == "End Address":
                     library.address_end = int(value)
                 elif key == "Entry Address":

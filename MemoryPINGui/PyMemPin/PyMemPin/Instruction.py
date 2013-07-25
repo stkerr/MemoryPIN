@@ -12,13 +12,15 @@ class Instruction(object):
         time - The wall clock time this instruction was executed
         '''
         self.address = address
+        self.original_address = address
         self.thread = thread
         self.library = library
         self.count = count
         self.time = time
-
+        self.library_offset = 0
+         
     def __repr__(self):
-        return "%08x\n%x\n%s\n%x\n%x" % (self.address, self.thread, self.library, self.count, self.time)
+        return "%08X\n%08x\n%x\n%s\n%x\n%x" % (self.address, self.original_address, self.thread, self.library, self.count, self.time)
 
     def __getitem__(self, index):
         """
@@ -26,7 +28,7 @@ class Instruction(object):
         indexes, such as instr[2] to return the library name
         """
         if index == 0:
-            return "0x%08X" % self.address
+            return "0x%08X" % (self.address)
         elif index == 1:
             return self.thread
         elif index == 2:
