@@ -11,7 +11,7 @@ class Library(object):
         self.address_new_start = address_start
 
     def __repr__(self):
-        return "%s\n0x%08X\n0x%08X\n0x%08X\n0x%0*X\n" % (self.name, self.address_start, self.address_end, self.address_entry, self.address_new_start)
+        return "%s\n0x%08X\n0x%08X\n0x%08X\n0x%08X\n" % (self.name, self.address_start, self.address_end, self.address_entry, self.address_new_start)
 
     def __getitem__(self,index):
         if index == 0:

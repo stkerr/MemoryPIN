@@ -49,6 +49,7 @@ class DataImporter(object):
                     instruction.thread = int(value)
                 elif key == 'Instruction Address':
                     instruction.address = int(value)
+                    instruction.original_address = int(value)
                 elif key == 'Library Name':
                     self.seen_libraries.add(value)
                     instruction.library = value

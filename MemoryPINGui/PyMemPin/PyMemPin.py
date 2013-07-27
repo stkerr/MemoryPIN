@@ -14,13 +14,16 @@ if __name__ == "__main__":
 
     # Spawn a Qt application
     app = QApplication([])
-  
+
     # Load the custom GUI into an object, which links it to th existing Qt application
     gui = PyQtGui()
     
     # Load our trace data into the GUI
     gui.instruction_data = data_importer.instruction_log.values()
     gui.library_data = data_importer.library_log.values()
+
+    # Setup the GUI
+    gui.setup()
 
     # open the GUI up. Note that this call blocks.
     return_code = app.exec_()

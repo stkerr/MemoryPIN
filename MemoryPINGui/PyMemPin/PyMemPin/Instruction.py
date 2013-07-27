@@ -35,6 +35,18 @@ class Instruction(object):
             return self.library
         elif index == 3:
             return self.count
-        else:
+        elif index == 4:
             return self.time
+        elif index == 'address':
+            return "0x%08X" % (self.address)
+        elif index == 'thread':
+            return self.thread
+        elif index == 'library':
+            return self.library
+        elif index == 'count':
+            return self.count
+        elif index == 'time':
+            return self.time
+        else:
+            raise IndexError(str(index) + " not defined!")
 
