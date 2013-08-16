@@ -45,6 +45,7 @@ int memDumpCount = 1;
 unsigned long instructionCount = 0; // the number of instructions we have traced
 std::ofstream TraceFile;
 UINT32 count_trace = 0; // current trace number
+unsigned int executionDepth = 0;
 
 bool CheckMonitoringEvent()
 {
@@ -200,8 +201,21 @@ void InstructionTrace(INS ins, void* v)
             break;
         }
     }
+
+    if(INS_IsCall(ins) == true)
+    {
+    	executionDepth++;
+    }
+    else if(INS_IsRet(ins) == true)
+    {
+    	executionDepth--;
+    }
+
+    printf("Depth: %d\n", executionDepth);
+    
     fprintf(instructionLogFile, "Instruction Count: %d |", instructionCount++);
 	fprintf(instructionLogFile, "Time: %d |", WINDOWS::GetTickCount());
+	fprintf(instructionLogFile, "Depth: %d |", executionDepth);
     fprintf(instructionLogFile, "\n");
  }
 

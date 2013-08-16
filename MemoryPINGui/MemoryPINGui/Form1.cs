@@ -431,5 +431,10 @@ namespace MemoryPINGui
 
 
         }
+
+        private void resultsGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

@@ -88,6 +88,13 @@ namespace MemoryPINGui
         uint threadid;
         uint tickcount;
         int instructionnumber;
+        int depth;
+
+        public int Depth
+        {
+            get { return depth; }
+            set { depth = value; }
+        }
 
         public string LibraryName
         {
@@ -274,7 +281,8 @@ namespace MemoryPINGui
                                         //throw new InvalidDataException("Somehow executed a non-loaded library!");
                                         Library strange = new Library();
                                         strange.Name = "(!) " + keyvalue[1].Trim();
-                                        libraries.Add(strange);
+                                        if(!libraries.Contains(strange))
+                                            libraries.Add(strange);
                                     }
                                     List<Library> lib = libraries.Where(x => x.Name.Equals(keyvalue[1].Trim())).ToList();
                                     if(lib.Count != 0)
@@ -302,6 +310,13 @@ namespace MemoryPINGui
                                         instr.Time = (uint)time;
                                     else
                                         instr.Instructionnumber = -1;
+                                    break;
+                                case "Depth":
+                                    int depth;
+                                    if (Int32.TryParse(keyvalue[1], out depth))
+                                        instr.Depth = (int)depth;
+                                    else
+                                        instr.Depth = -1;
                                     break;
                                 default:
                                     break;

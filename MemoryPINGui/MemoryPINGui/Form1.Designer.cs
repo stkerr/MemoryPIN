@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.histogramEntryBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.histogramEntryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -62,11 +62,6 @@
             this.librariesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.processInstructionFileButton = new System.Windows.Forms.Button();
             this.resultsGridView = new System.Windows.Forms.DataGridView();
-            this.instructionnumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.addressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.threadidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LibraryName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.instructionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.loadedThreadList = new System.Windows.Forms.ListBox();
             this.threadBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -76,6 +71,12 @@
             this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.histogramBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.instructionnumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.addressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Depth = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.threadidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LibraryName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource)).BeginInit();
             this.tabContainer.SuspendLayout();
@@ -423,6 +424,7 @@
             this.resultsGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.instructionnumberDataGridViewTextBoxColumn,
             this.addressDataGridViewTextBoxColumn,
+            this.Depth,
             this.threadidDataGridViewTextBoxColumn,
             this.timeDataGridViewTextBoxColumn,
             this.LibraryName});
@@ -436,44 +438,7 @@
             this.tableLayoutPanel1.SetRowSpan(this.resultsGridView, 2);
             this.resultsGridView.Size = new System.Drawing.Size(650, 321);
             this.resultsGridView.TabIndex = 3;
-            // 
-            // instructionnumberDataGridViewTextBoxColumn
-            // 
-            this.instructionnumberDataGridViewTextBoxColumn.DataPropertyName = "Instructionnumber";
-            this.instructionnumberDataGridViewTextBoxColumn.HeaderText = "Instructionnumber";
-            this.instructionnumberDataGridViewTextBoxColumn.Name = "instructionnumberDataGridViewTextBoxColumn";
-            this.instructionnumberDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // addressDataGridViewTextBoxColumn
-            // 
-            this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
-            dataGridViewCellStyle2.Format = "X08";
-            dataGridViewCellStyle2.NullValue = "0";
-            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
-            this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
-            this.addressDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // threadidDataGridViewTextBoxColumn
-            // 
-            this.threadidDataGridViewTextBoxColumn.DataPropertyName = "Threadid";
-            this.threadidDataGridViewTextBoxColumn.HeaderText = "Threadid";
-            this.threadidDataGridViewTextBoxColumn.Name = "threadidDataGridViewTextBoxColumn";
-            this.threadidDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // timeDataGridViewTextBoxColumn
-            // 
-            this.timeDataGridViewTextBoxColumn.DataPropertyName = "Time";
-            this.timeDataGridViewTextBoxColumn.HeaderText = "Time";
-            this.timeDataGridViewTextBoxColumn.Name = "timeDataGridViewTextBoxColumn";
-            this.timeDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // LibraryName
-            // 
-            this.LibraryName.DataPropertyName = "LibraryName";
-            this.LibraryName.HeaderText = "LibraryName";
-            this.LibraryName.Name = "LibraryName";
-            this.LibraryName.ReadOnly = true;
+            this.resultsGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.resultsGridView_CellContentClick);
             // 
             // instructionBindingSource
             // 
@@ -539,6 +504,51 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // instructionnumberDataGridViewTextBoxColumn
+            // 
+            this.instructionnumberDataGridViewTextBoxColumn.DataPropertyName = "Instructionnumber";
+            this.instructionnumberDataGridViewTextBoxColumn.HeaderText = "Instructionnumber";
+            this.instructionnumberDataGridViewTextBoxColumn.Name = "instructionnumberDataGridViewTextBoxColumn";
+            this.instructionnumberDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // addressDataGridViewTextBoxColumn
+            // 
+            this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
+            dataGridViewCellStyle1.Format = "X08";
+            dataGridViewCellStyle1.NullValue = "0";
+            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
+            this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
+            this.addressDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // Depth
+            // 
+            this.Depth.DataPropertyName = "Depth";
+            this.Depth.HeaderText = "Depth";
+            this.Depth.Name = "Depth";
+            this.Depth.ReadOnly = true;
+            // 
+            // threadidDataGridViewTextBoxColumn
+            // 
+            this.threadidDataGridViewTextBoxColumn.DataPropertyName = "Threadid";
+            this.threadidDataGridViewTextBoxColumn.HeaderText = "Threadid";
+            this.threadidDataGridViewTextBoxColumn.Name = "threadidDataGridViewTextBoxColumn";
+            this.threadidDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // timeDataGridViewTextBoxColumn
+            // 
+            this.timeDataGridViewTextBoxColumn.DataPropertyName = "Time";
+            this.timeDataGridViewTextBoxColumn.HeaderText = "Time";
+            this.timeDataGridViewTextBoxColumn.Name = "timeDataGridViewTextBoxColumn";
+            this.timeDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // LibraryName
+            // 
+            this.LibraryName.DataPropertyName = "LibraryName";
+            this.LibraryName.HeaderText = "LibraryName";
+            this.LibraryName.Name = "LibraryName";
+            this.LibraryName.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -602,11 +612,6 @@
         private System.Windows.Forms.DataGridView resultsGridView;
         private System.Windows.Forms.ListBox loadedThreadList;
         private System.Windows.Forms.BindingSource threadBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn instructionnumberDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn threadidDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LibraryName;
         private System.Windows.Forms.ContextMenuStrip libraryListContextMenu;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.TabPage tabPage4;
@@ -616,6 +621,12 @@
         private System.Windows.Forms.DataGridView histogramDataView;
         private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn instructionnumberDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Depth;
+        private System.Windows.Forms.DataGridViewTextBoxColumn threadidDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LibraryName;
     }
 }
 
