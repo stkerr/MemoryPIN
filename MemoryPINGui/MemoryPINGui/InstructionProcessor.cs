@@ -4,161 +4,37 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace MemoryPINGui
 {
-    public class HistogramEntry : IComparable<HistogramEntry>
-    {
-        uint address;
-
-        public uint Address
-        {
-            get { return address; }
-            set { address = value; }
-        }
-        uint count;
-
-        public uint Count
-        {
-            get { return count; }
-            set { count = value; }
-        }
-
-        public HistogramEntry(uint addr, uint count)
-        {
-            this.Address = addr;
-            this.Count = count;
-        }
-
-        /*
-        public int CompareTo(HistogramEntry other)
-        {
-            if (this.Address == other.Address) return 0;
-            else if (this.Address < other.Address) return -1;
-            else return 1;
-        }
-        */
-
-        public int CompareTo(HistogramEntry other)
-        {
-            if (this.Count == other.Count) return 0;
-            else if (this.Count < other.Count) return -1;
-            else return 1;
-        }
-    }
-
-    public class Library
-    {
-        string name;
-
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-        
-        uint loadaddress;
-
-        public uint Loadaddress
-        {
-            get { return loadaddress; }
-            set { loadaddress = value; }
-        }
-        
-        uint originaladdress;
-
-        public uint Originaladdress
-        {
-            get { return originaladdress; }
-            set { originaladdress = value; }
-        }
-    }
-
-    public class Instruction
-    {
-        uint address_traced; // the address we got from the trace file
-
-        public uint Address_traced
-        {
-            get { return address_traced; }
-            set { address_traced = value; }
-        }
-        uint address; // the value calculated with rebasing
-        Library library;
-        uint threadid;
-        uint tickcount;
-        int instructionnumber;
-        int depth;
-
-        public int Depth
-        {
-            get { return depth; }
-            set { depth = value; }
-        }
-
-        public string LibraryName
-        {
-            get { return library.Name; }
-            set { library.Name = value; }
-        }
-
-        public int Instructionnumber
-        {
-            get { return instructionnumber; }
-            set { instructionnumber = value; }
-        }
-
-        public uint Time
-        {
-            get { return tickcount; }
-            set { tickcount = value; }
-        }
-
-        public uint Threadid
-        {
-            get { return threadid; }
-            set { threadid = value; }
-        }
-
-        public Library Library
-        {
-            get { return library; }
-            set { library = value; }
-        }
-
-        public uint Address
-        {
-            get { return address; }
-            set { address = value; }
-        }
-
-        public Instruction(uint address, string library, uint threadid, int instructionnumber, uint tickcount)
-        {
-            this.Address = this.Address_traced = address;
-            this.Library = null;
-            this.Threadid = threadid;
-            this.Instructionnumber = instructionnumber;
-            this.Time = tickcount;
-
-        }
-
-        public Instruction()
-        {
-            this.Address = this.Address_traced = 0;
-            this.Library = new Library();
-            this.Threadid = 0;
-            this.Instructionnumber = -1;
-            this.Time = 0;
-        }
-
-    }
-
     /*
      * Responsible for parsiong and managing information from an instruction trace log. 
      */
     class InstructionProcessor
     {        
         IList<Instruction> instructions;
+        int minDepth = Int32.MaxValue, maxDepth = -1;
+        Color[] colorBank;
+
+        public Color[] ColorBank
+        {
+            get { return colorBank; }
+            set { colorBank = value; }
+        }
+
+        public int MaxDepth
+        {
+            get { return maxDepth; }
+            set { maxDepth = value; }
+        }
+
+        public int MinDepth
+        {
+            get { return minDepth; }
+            set { minDepth = value; }
+        }
+
         IList<Library> libraries; // all libraries
         private List<string> includedLibraries; // a list of libraries to render 
         
@@ -224,6 +100,25 @@ namespace MemoryPINGui
             threads = new List<int>();
             includedThreads = new List<int>();
             libraryOffsetDictionary = new Dictionary<string, int>();
+
+            // initialise the color bank
+            colorBank = new Color[16];
+            colorBank[0] = Color.FromArgb(246, 150, 121);
+            colorBank[1] = Color.FromArgb(249, 173, 129);
+            colorBank[2] = Color.FromArgb(253, 198, 137);
+            colorBank[3] = Color.FromArgb(255, 247, 153);
+            colorBank[4] = Color.FromArgb(196, 223, 155);
+            colorBank[5] = Color.FromArgb(163, 211, 156);
+            colorBank[6] = Color.FromArgb(130, 202, 156);
+            colorBank[7] = Color.FromArgb(122, 204, 200);
+            colorBank[8] = Color.FromArgb(109, 207, 246);
+            colorBank[9] = Color.FromArgb(125, 167, 217);
+            colorBank[10] = Color.FromArgb(131, 147, 202);
+            colorBank[11] = Color.FromArgb(135, 129, 189);
+            colorBank[12] = Color.FromArgb(161, 134, 190);
+            colorBank[13] = Color.FromArgb(189, 140, 191);
+            colorBank[14] = Color.FromArgb(244, 154, 193);
+            colorBank[15] = Color.FromArgb(245, 152, 157);
 
             using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -314,7 +209,10 @@ namespace MemoryPINGui
                                 case "Depth":
                                     int depth;
                                     if (Int32.TryParse(keyvalue[1], out depth))
+                                    {
                                         instr.Depth = (int)depth;
+                                        instr.Color = ColorBank[instr.Depth % ColorBank.Length];
+                                    }
                                     else
                                         instr.Depth = -1;
                                     break;
@@ -325,6 +223,11 @@ namespace MemoryPINGui
 
                             
                         }
+
+                        if (MaxDepth < instr.Depth)
+                            MaxDepth = instr.Depth;
+                        if (MinDepth > instr.Depth)
+                            MinDepth = instr.Depth;
                         instructions.Add(instr);
 
                     }

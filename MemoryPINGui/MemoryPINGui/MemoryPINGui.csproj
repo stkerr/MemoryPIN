@@ -82,7 +82,10 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="HistogramEntry.cs" />
+    <Compile Include="Instruction.cs" />
     <Compile Include="InstructionProcessor.cs" />
+    <Compile Include="Library.cs" />
     <Compile Include="LibraryRebaseForm.cs">
       <SubType>Form</SubType>
     </Compile>

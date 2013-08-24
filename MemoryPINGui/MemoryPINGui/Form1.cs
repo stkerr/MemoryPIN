@@ -16,8 +16,6 @@ namespace MemoryPINGui
 
     public partial class Form1 : Form
     {
-        InstructionProcessor processor;
-
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         internal static extern IntPtr OpenEvent(int desiredAccess, bool inheritHandle, string name);
 
@@ -45,7 +43,10 @@ namespace MemoryPINGui
         IntPtr hMonitoringEvent;
         IntPtr hSnapshotEvent;
 
+        InstructionProcessor processor;
         LibraryResultsProcessor libraryProcessor;
+
+        Color[] colorBank;
 
         public Form1()
         {
@@ -193,7 +194,6 @@ namespace MemoryPINGui
             }
         }
 
-
         private void instructionTracingCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (hMonitoringEvent == null)
@@ -296,6 +296,8 @@ namespace MemoryPINGui
             this.Refresh();
         }
 
+        
+
         private void processInstructionFileButton_Click(object sender, EventArgs e)
         {
             libraryProcessor = new LibraryResultsProcessor("memorypin.txt");
@@ -304,6 +306,9 @@ namespace MemoryPINGui
             librariesBindingSource.DataSource = processor.Libraries.Select(x => x.Name);
             instructionBindingSource.DataSource = processor.Instructions;
             threadBindingSource.DataSource = processor.Threads;
+
+            // remove the data source changed handler briefly, since it slows things down
+            this.resultsGridView.DataSourceChanged -= new System.EventHandler(this.resultsGridView_DataSourceChanged);
 
             for (int i = 0; i < processor.Libraries.Count; i++)
             {
@@ -315,7 +320,11 @@ namespace MemoryPINGui
                 loadedThreadList.SetSelected(i, true); // select all threads initially
             }
 
-
+            // re add the event handler for data source adds
+            this.resultsGridView.DataSourceChanged += new System.EventHandler(this.resultsGridView_DataSourceChanged);
+            
+            // invoke the data source change handler since we were ignoring it before
+            resultsGridView_DataSourceChanged(null, null);
         }
 
         private void resultsPageActive(object sender, EventArgs e)
@@ -387,16 +396,11 @@ namespace MemoryPINGui
             resultsGridView.DataSource = processor.Instructions;
         }
 
-        private void tabContainer_TabIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void histogramData_Enter(object sender, EventArgs e)
         {
-            if(libraryProcessor == null)
+            if (libraryProcessor == null)
                 libraryProcessor = new LibraryResultsProcessor("memorypin.txt");
-            if(processor == null)
+            if (processor == null)
                 processor = new InstructionProcessor("instructionTrace.txt", libraryProcessor.Libraries);
 
             IList<Instruction> instrs = processor.Instructions;
@@ -432,9 +436,19 @@ namespace MemoryPINGui
 
         }
 
-        private void resultsGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private Boolean RGBColorCompare(Color one, Color two)
         {
-
+            return (one.R == two.R && one.B == two.B && one.G == two.G);
         }
+
+        private void resultsGridView_DataSourceChanged(object sender, EventArgs e)
+        {
+            // apply the colors to the instructions
+            for (int i = 0; i < resultsGridView.Rows.Count; i++)
+            {     
+                resultsGridView.Rows[i].DefaultCellStyle.BackColor = ((Instruction)(resultsGridView.Rows[i].DataBoundItem)).Color;
+            }
+        }
+
     }
 }
