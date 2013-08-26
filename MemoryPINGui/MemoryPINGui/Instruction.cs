@@ -22,6 +22,13 @@ namespace MemoryPINGui
         int instructionnumber;
         int depth;
         Color color;
+        string name;
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
 
         public Color Color
         {
@@ -71,7 +78,7 @@ namespace MemoryPINGui
             set { address = value; }
         }
 
-        public Instruction(uint address, string library, uint threadid, int instructionnumber, uint tickcount, Color? color=null)
+        public Instruction(uint address, string library, uint threadid, int instructionnumber, uint tickcount, string name="", Color? color=null)
         {
             this.Address = this.Address_traced = address;
             this.Library = null;
@@ -79,6 +86,7 @@ namespace MemoryPINGui
             this.Instructionnumber = instructionnumber;
             this.Time = tickcount;
             this.Color = color.HasValue ? color.Value : Color.White;
+            this.Name = "";
         }
 
         public Instruction()
@@ -89,6 +97,7 @@ namespace MemoryPINGui
             this.Instructionnumber = -1;
             this.Time = 0;
             this.Color = Color.White;
+            this.Name = "";
         }
 
     }

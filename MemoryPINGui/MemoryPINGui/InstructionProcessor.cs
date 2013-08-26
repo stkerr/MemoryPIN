@@ -180,8 +180,14 @@ namespace MemoryPINGui
                                             libraries.Add(strange);
                                     }
                                     List<Library> lib = libraries.Where(x => x.Name.Equals(keyvalue[1].Trim())).ToList();
-                                    if(lib.Count != 0)
+                                    if (lib.Count != 0)
+                                    {
                                         instr.Library = lib.First();
+                                        }
+                                    else
+                                    {
+                                        Console.WriteLine("Found an instruction without a corresponding library!");
+                                    }
                                     if (!IncludedLibraries.Contains(keyvalue[1]))
                                     {
                                         IncludedLibraries.Add(keyvalue[1]);
@@ -222,6 +228,7 @@ namespace MemoryPINGui
                             }
 
                             
+                            
                         }
 
                         if (MaxDepth < instr.Depth)
@@ -231,6 +238,15 @@ namespace MemoryPINGui
                         instructions.Add(instr);
 
                     }
+                }
+            }
+
+            foreach(Instruction instr in Instructions)
+            {
+                List<string> outValue = new List<string>();
+                if (instr.Library.PeSupport != null && instr.Library.PeSupport.Exports.TryGetValue((int)instr.Address, out outValue))
+                {
+                    instr.Name = outValue[0];
                 }
             }
         }

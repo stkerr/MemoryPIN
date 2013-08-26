@@ -30,5 +30,13 @@ namespace MemoryPINGui
             get { return originaladdress; }
             set { originaladdress = value; }
         }
+
+        PESupport peSupport;
+
+        public PESupport PeSupport
+        {
+            get { return peSupport; }
+            set { peSupport = value; }
+        }
     }
 }

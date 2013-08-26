@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace MemoryPINGui
 {
@@ -55,9 +56,10 @@ namespace MemoryPINGui
             get { return libraries; }
             set { libraries = value; }
         }
-
+        
         public LibraryResultsProcessor(string filename)
         {
+            
             libraries = new List<Library>();
             libraries_string_interval = new Dictionary<string,Interval>();
             libraries_interval_string = new Dictionary<Interval, string>();
@@ -92,8 +94,18 @@ namespace MemoryPINGui
                             {
                                 case "Library Name":
                                     library.Name = keyvalue[1].Trim();
-                                    LibraryProcessor libProc = new LibraryProcessor(library.Name);
-                                    library.Originaladdress = (uint)libProc.GetImageBase();
+                                    
+
+                                    try
+                                    {
+                                        library.PeSupport = new PESupport(library.Name);
+                                        library.Originaladdress = (uint)library.PeSupport.ImageBase;
+                                    }
+                                    catch (ApplicationException e)
+                                    {
+                                        library.PeSupport = null;
+                                    }
+                                    
                                     break;
                                 case "Start Address":
                                     int addr;
