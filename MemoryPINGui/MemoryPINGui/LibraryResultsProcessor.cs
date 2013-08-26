@@ -64,6 +64,13 @@ namespace MemoryPINGui
             libraries_string_interval = new Dictionary<string,Interval>();
             libraries_interval_string = new Dictionary<Interval, string>();
 
+
+            Library nullLibrary = new Library();
+            nullLibrary.Name = "Select to view only system calls";
+            nullLibrary.Originaladdress = 0;
+            nullLibrary.PeSupport = null;
+            libraries.Add(nullLibrary);
+
             using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 using (StreamReader sr = new StreamReader(fs))

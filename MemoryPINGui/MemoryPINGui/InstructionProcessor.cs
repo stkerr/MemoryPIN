@@ -79,7 +79,14 @@ namespace MemoryPINGui
             {
                 // remove any filtered libraries
 
-                IList<Instruction> results = instructions.Where(x => includedLibraries.Contains(x.LibraryName) && includedThreads.Contains((int)x.Threadid)).ToList<Instruction>();
+                IList<Instruction> results = instructions.Where(
+                                                            (x => includedLibraries.Contains(x.LibraryName) && 
+                                                                (includedThreads.Contains((int)x.Threadid)) 
+                                                                || 
+                                                                x.Name != ""
+                                                            )
+                                                            
+                                                            ).ToList<Instruction>();
                 
                 // go through and adjust any instructions that have modified load addresses
                 foreach(Instruction i in results)

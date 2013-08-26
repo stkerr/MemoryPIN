@@ -498,10 +498,12 @@ namespace MemoryPINGui
         {
             this.LibraryName = LibraryName;
 
-            hLibrary = LoadLibraryEx(this.LibraryName, IntPtr.Zero, LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE);
+            hLibrary = IntPtr.Zero;
+            IntPtr original_hLibrary = LoadLibraryEx(this.LibraryName, IntPtr.Zero, LoadLibraryFlags.DONT_RESOLVE_DLL_REFERENCES); // access violations occur with LOAD_LIBRARY_AS_DATAFILE, but don't with DONT_RESOLVE_DLL_REFERENCES for some reason
+            hLibrary = new IntPtr(original_hLibrary.ToInt32() - original_hLibrary.ToInt32() % 4); // adjust things to a DWORD boundary
 
             int error = Marshal.GetLastWin32Error();
-            if (error != 0)
+            if (hLibrary == null && error != 0)
             {
                 throw new System.ApplicationException("Got error " + error + " when loading library " + LibraryName);
             }
@@ -512,8 +514,7 @@ namespace MemoryPINGui
             {
                 throw new System.ApplicationException("Library does not appear to be a valid DOS file!");
             }
-
-
+            
             ntHeader = (IMAGE_NT_HEADERS32)Marshal.PtrToStructure(hLibrary + dosHeader.e_lfanew, typeof(IMAGE_NT_HEADERS32));
             if (!ntHeader.isValid)
             {
@@ -560,7 +561,7 @@ namespace MemoryPINGui
 
             }
 
-            FreeLibrary(hLibrary);
+            //FreeLibrary(original_hLibrary);
         }
     }
 }

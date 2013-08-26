@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 namespace MemoryPINGui
 {
 
-    public partial class Form1 : Form
+    public partial class form1 : Form
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         internal static extern IntPtr OpenEvent(int desiredAccess, bool inheritHandle, string name);
@@ -48,7 +48,7 @@ namespace MemoryPINGui
 
         Color[] colorBank;
 
-        public Form1()
+        public form1()
         {
             hMonitoringEvent = OpenEvent(0x000F0000 | 0x00100000 | 0x03, false, "MonitoringEvent"); // EVENT_ALL_ACCESS
             if (hMonitoringEvent.ToInt32() == 0)
