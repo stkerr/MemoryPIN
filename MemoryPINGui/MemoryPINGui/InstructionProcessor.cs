@@ -16,6 +16,19 @@ namespace MemoryPINGui
         IList<Instruction> instructions;
         int minDepth = Int32.MaxValue, maxDepth = -1;
         Color[] colorBank;
+        int lowFilterDepth = 0, highFilterDepth = Int32.MaxValue;
+
+        public int LowFilterDepth
+        {
+            get { return lowFilterDepth; }
+            set { lowFilterDepth = value; }
+        }
+
+        public int HighFilterDepth
+        {
+            get { return highFilterDepth; }
+            set { highFilterDepth = value; }
+        }
 
         public Color[] ColorBank
         {
@@ -80,10 +93,18 @@ namespace MemoryPINGui
                 // remove any filtered libraries
 
                 IList<Instruction> results = instructions.Where(
-                                                            (x => includedLibraries.Contains(x.LibraryName) && 
-                                                                (includedThreads.Contains((int)x.Threadid)) 
-                                                                || 
-                                                                x.Name != ""
+                                                            (x => 
+                                                                (
+                                                                    includedLibraries.Contains(x.LibraryName) 
+                                                                    ||
+                                                                    x.SystemCallName != ""
+                                                                )
+                                                                && 
+                                                                includedThreads.Contains((int)x.Threadid)
+                                                                &&
+                                                                x.Depth <= HighFilterDepth
+                                                                &&
+                                                                x.Depth >= LowFilterDepth
                                                             )
                                                             
                                                             ).ToList<Instruction>();
@@ -202,7 +223,7 @@ namespace MemoryPINGui
                                     /*
                                     instr.Library.Loadaddress = lib.First().Loadaddress;
                                     instr.Library.Originaladdress = lib.First().Originaladdress;
-                                    instr.Library.Name = keyvalue[1].Trim();
+                                    instr.Library.SystemCallName = keyvalue[1].Trim();
                                      */
                                     break;
                                 case "Instruction Count":
@@ -253,7 +274,7 @@ namespace MemoryPINGui
                 List<string> outValue = new List<string>();
                 if (instr.Library.PeSupport != null && instr.Library.PeSupport.Exports.TryGetValue((int)instr.Address, out outValue))
                 {
-                    instr.Name = outValue[0];
+                    instr.SystemCallName = outValue[0];
                 }
             }
         }

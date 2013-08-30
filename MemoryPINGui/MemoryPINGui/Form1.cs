@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 namespace MemoryPINGui
 {
 
-    public partial class form1 : Form
+    public partial class Form1 : Form
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         internal static extern IntPtr OpenEvent(int desiredAccess, bool inheritHandle, string name);
@@ -48,7 +48,7 @@ namespace MemoryPINGui
 
         Color[] colorBank;
 
-        public form1()
+        public Form1()
         {
             hMonitoringEvent = OpenEvent(0x000F0000 | 0x00100000 | 0x03, false, "MonitoringEvent"); // EVENT_ALL_ACCESS
             if (hMonitoringEvent.ToInt32() == 0)
@@ -296,8 +296,6 @@ namespace MemoryPINGui
             this.Refresh();
         }
 
-        
-
         private void processInstructionFileButton_Click(object sender, EventArgs e)
         {
             libraryProcessor = new LibraryResultsProcessor("memorypin.txt");
@@ -448,6 +446,32 @@ namespace MemoryPINGui
             {     
                 resultsGridView.Rows[i].DefaultCellStyle.BackColor = ((Instruction)(resultsGridView.Rows[i].DataBoundItem)).Color;
             }
+        }
+
+        private void depthFilterChanged(object sender, EventArgs e)
+        {
+            int highDepth;
+            int lowDepth;
+            if (!Int32.TryParse(highDepthTextBox.Text, out highDepth))
+            {
+                highDepthTextBox.Text = "Invalid numeric depth!";
+                return;
+            }
+
+            if (!Int32.TryParse(lowDepthTextBox.Text, out lowDepth))
+            {
+                lowDepthTextBox.Text = "Invalid numeric depth!";
+                return;
+            }
+
+            if (lowDepth > highDepth)
+                return;
+
+            processor.HighFilterDepth = highDepth;
+            processor.LowFilterDepth = lowDepth;
+
+            // update the data source
+            resultsGridView.DataSource = processor.Instructions;
         }
 
     }

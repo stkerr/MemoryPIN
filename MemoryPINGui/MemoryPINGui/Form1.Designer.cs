@@ -1,6 +1,6 @@
 ﻿namespace MemoryPINGui
 {
-    partial class form1
+    partial class Form1
     {
         /// <summary>
         /// Required designer variable.
@@ -10,7 +10,7 @@
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param systemCallname="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.histogramEntryBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.histogramEntryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -62,22 +62,24 @@
             this.librariesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.processInstructionFileButton = new System.Windows.Forms.Button();
             this.resultsGridView = new System.Windows.Forms.DataGridView();
-            this.instructionnumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.addressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Depth = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.threadidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LibraryName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.instructionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.loadedThreadList = new System.Windows.Forms.ListBox();
             this.threadBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.lowDepthTextBox = new System.Windows.Forms.TextBox();
+            this.highDepthTextBox = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.histogramDataView = new System.Windows.Forms.DataGridView();
             this.addressDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.histogramBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.instructionnumberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.addressDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SystemCallName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Depth = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.threadidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LibraryName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource)).BeginInit();
             this.tabContainer.SuspendLayout();
@@ -355,13 +357,16 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.64423F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.35577F));
+            this.tableLayoutPanel1.ColumnCount = 3;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.11538F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 29.00641F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.92628F));
             this.tableLayoutPanel1.Controls.Add(this.loadedLibraryList, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.processInstructionFileButton, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.resultsGridView, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.loadedThreadList, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.lowDepthTextBox, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.highDepthTextBox, 2, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -374,14 +379,15 @@
             // 
             // loadedLibraryList
             // 
+            this.tableLayoutPanel1.SetColumnSpan(this.loadedLibraryList, 2);
             this.loadedLibraryList.ContextMenuStrip = this.libraryListContextMenu;
             this.loadedLibraryList.DataSource = this.librariesBindingSource;
             this.loadedLibraryList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.loadedLibraryList.FormattingEnabled = true;
-            this.loadedLibraryList.Location = new System.Drawing.Point(659, 36);
+            this.loadedLibraryList.Location = new System.Drawing.Point(528, 36);
             this.loadedLibraryList.Name = "loadedLibraryList";
             this.loadedLibraryList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.loadedLibraryList.Size = new System.Drawing.Size(586, 157);
+            this.loadedLibraryList.Size = new System.Drawing.Size(717, 157);
             this.loadedLibraryList.TabIndex = 2;
             this.loadedLibraryList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.loadedLibraryList_MouseClick);
             this.loadedLibraryList.SelectedIndexChanged += new System.EventHandler(this.loadedLibraryList_SelectedIndexChanged);
@@ -424,7 +430,7 @@
             this.resultsGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.instructionnumberDataGridViewTextBoxColumn,
             this.addressDataGridViewTextBoxColumn,
-            this.Name,
+            this.SystemCallName,
             this.Depth,
             this.threadidDataGridViewTextBoxColumn,
             this.timeDataGridViewTextBoxColumn,
@@ -437,61 +443,9 @@
             this.resultsGridView.ReadOnly = true;
             this.resultsGridView.RowHeadersVisible = false;
             this.tableLayoutPanel1.SetRowSpan(this.resultsGridView, 2);
-            this.resultsGridView.Size = new System.Drawing.Size(650, 321);
+            this.resultsGridView.Size = new System.Drawing.Size(519, 321);
             this.resultsGridView.TabIndex = 3;
             this.resultsGridView.DataSourceChanged += new System.EventHandler(this.resultsGridView_DataSourceChanged);
-            // 
-            // instructionnumberDataGridViewTextBoxColumn
-            // 
-            this.instructionnumberDataGridViewTextBoxColumn.DataPropertyName = "Instructionnumber";
-            this.instructionnumberDataGridViewTextBoxColumn.HeaderText = "Instructionnumber";
-            this.instructionnumberDataGridViewTextBoxColumn.Name = "instructionnumberDataGridViewTextBoxColumn";
-            this.instructionnumberDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // addressDataGridViewTextBoxColumn
-            // 
-            this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
-            dataGridViewCellStyle3.Format = "X08";
-            dataGridViewCellStyle3.NullValue = "0";
-            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-            this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
-            this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
-            this.addressDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // Name
-            // 
-            this.Name.DataPropertyName = "Name";
-            this.Name.HeaderText = "Name";
-            this.Name.Name = "Name";
-            this.Name.ReadOnly = true;
-            // 
-            // Depth
-            // 
-            this.Depth.DataPropertyName = "Depth";
-            this.Depth.HeaderText = "Depth";
-            this.Depth.Name = "Depth";
-            this.Depth.ReadOnly = true;
-            // 
-            // threadidDataGridViewTextBoxColumn
-            // 
-            this.threadidDataGridViewTextBoxColumn.DataPropertyName = "Threadid";
-            this.threadidDataGridViewTextBoxColumn.HeaderText = "Threadid";
-            this.threadidDataGridViewTextBoxColumn.Name = "threadidDataGridViewTextBoxColumn";
-            this.threadidDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // timeDataGridViewTextBoxColumn
-            // 
-            this.timeDataGridViewTextBoxColumn.DataPropertyName = "Time";
-            this.timeDataGridViewTextBoxColumn.HeaderText = "Time";
-            this.timeDataGridViewTextBoxColumn.Name = "timeDataGridViewTextBoxColumn";
-            this.timeDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // LibraryName
-            // 
-            this.LibraryName.DataPropertyName = "LibraryName";
-            this.LibraryName.HeaderText = "LibraryName";
-            this.LibraryName.Name = "LibraryName";
-            this.LibraryName.ReadOnly = true;
             // 
             // instructionBindingSource
             // 
@@ -499,15 +453,34 @@
             // 
             // loadedThreadList
             // 
+            this.tableLayoutPanel1.SetColumnSpan(this.loadedThreadList, 2);
             this.loadedThreadList.DataSource = this.threadBindingSource;
             this.loadedThreadList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.loadedThreadList.FormattingEnabled = true;
-            this.loadedThreadList.Location = new System.Drawing.Point(659, 199);
+            this.loadedThreadList.Location = new System.Drawing.Point(528, 199);
             this.loadedThreadList.Name = "loadedThreadList";
             this.loadedThreadList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.loadedThreadList.Size = new System.Drawing.Size(586, 158);
+            this.loadedThreadList.Size = new System.Drawing.Size(717, 158);
             this.loadedThreadList.TabIndex = 4;
             this.loadedThreadList.SelectedValueChanged += new System.EventHandler(this.loadedThreadList_SelectedValueChanged);
+            // 
+            // lowDepthTextBox
+            // 
+            this.lowDepthTextBox.Location = new System.Drawing.Point(528, 3);
+            this.lowDepthTextBox.Name = "lowDepthTextBox";
+            this.lowDepthTextBox.Size = new System.Drawing.Size(355, 20);
+            this.lowDepthTextBox.TabIndex = 5;
+            this.lowDepthTextBox.Text = "Lower Instruction Depth";
+            this.lowDepthTextBox.TextChanged += new System.EventHandler(this.depthFilterChanged);
+            // 
+            // highDepthTextBox
+            // 
+            this.highDepthTextBox.Location = new System.Drawing.Point(889, 3);
+            this.highDepthTextBox.Name = "highDepthTextBox";
+            this.highDepthTextBox.Size = new System.Drawing.Size(354, 20);
+            this.highDepthTextBox.TabIndex = 6;
+            this.highDepthTextBox.Text = "High Instruction Depth";
+            this.highDepthTextBox.TextChanged += new System.EventHandler(this.depthFilterChanged);
             // 
             // tabPage4
             // 
@@ -557,12 +530,65 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // form1
+            // instructionnumberDataGridViewTextBoxColumn
+            // 
+            this.instructionnumberDataGridViewTextBoxColumn.DataPropertyName = "Instructionnumber";
+            this.instructionnumberDataGridViewTextBoxColumn.HeaderText = "Instructionnumber";
+            this.instructionnumberDataGridViewTextBoxColumn.Name = "instructionnumberDataGridViewTextBoxColumn";
+            this.instructionnumberDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // addressDataGridViewTextBoxColumn
+            // 
+            this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
+            dataGridViewCellStyle1.Format = "X08";
+            dataGridViewCellStyle1.NullValue = "0";
+            this.addressDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
+            this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
+            this.addressDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // SystemCallName
+            // 
+            this.SystemCallName.DataPropertyName = "SystemCallName";
+            this.SystemCallName.HeaderText = "SystemCallName";
+            this.SystemCallName.Name = "SystemCallName";
+            this.SystemCallName.ReadOnly = true;
+            // 
+            // Depth
+            // 
+            this.Depth.DataPropertyName = "Depth";
+            this.Depth.HeaderText = "Depth";
+            this.Depth.Name = "Depth";
+            this.Depth.ReadOnly = true;
+            // 
+            // threadidDataGridViewTextBoxColumn
+            // 
+            this.threadidDataGridViewTextBoxColumn.DataPropertyName = "Threadid";
+            this.threadidDataGridViewTextBoxColumn.HeaderText = "Threadid";
+            this.threadidDataGridViewTextBoxColumn.Name = "threadidDataGridViewTextBoxColumn";
+            this.threadidDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // timeDataGridViewTextBoxColumn
+            // 
+            this.timeDataGridViewTextBoxColumn.DataPropertyName = "Time";
+            this.timeDataGridViewTextBoxColumn.HeaderText = "Time";
+            this.timeDataGridViewTextBoxColumn.Name = "timeDataGridViewTextBoxColumn";
+            this.timeDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // LibraryName
+            // 
+            this.LibraryName.DataPropertyName = "LibraryName";
+            this.LibraryName.HeaderText = "LibraryName";
+            this.LibraryName.Name = "LibraryName";
+            this.LibraryName.ReadOnly = true;
+            // 
+            // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1262, 392);
             this.Controls.Add(this.tabContainer);
+            this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource)).EndInit();
@@ -573,6 +599,7 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.libraryListContextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.librariesBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).EndInit();
@@ -628,9 +655,11 @@
         private System.Windows.Forms.DataGridView histogramDataView;
         private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
+        private System.Windows.Forms.TextBox lowDepthTextBox;
+        private System.Windows.Forms.TextBox highDepthTextBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn instructionnumberDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SystemCallName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Depth;
         private System.Windows.Forms.DataGridViewTextBoxColumn threadidDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;

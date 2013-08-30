@@ -22,12 +22,12 @@ namespace MemoryPINGui
         int instructionnumber;
         int depth;
         Color color;
-        string name;
+        string systemCallname;
 
-        public string Name
+        public string SystemCallName
         {
-            get { return name; }
-            set { name = value; }
+            get { return systemCallname; }
+            set { systemCallname = value; }
         }
 
         public Color Color
@@ -86,7 +86,7 @@ namespace MemoryPINGui
             this.Instructionnumber = instructionnumber;
             this.Time = tickcount;
             this.Color = color.HasValue ? color.Value : Color.White;
-            this.Name = "";
+            this.SystemCallName = "";
         }
 
         public Instruction()
@@ -97,7 +97,7 @@ namespace MemoryPINGui
             this.Instructionnumber = -1;
             this.Time = 0;
             this.Color = Color.White;
-            this.Name = "";
+            this.SystemCallName = "";
         }
 
     }
