@@ -56,5 +56,5 @@ endif
 COMP_OBJ := -I $(BOOST_INCLUDE) $(COMP_OBJ)
 
 # Add in some required libraries for the PIN tool
-TOOL_LIBS := $(TOOL_LIBS) imagehlp.lib 
+TOOL_LIBS := $(TOOL_LIBS) $(EXTRA_TOOL_LIBS)
 

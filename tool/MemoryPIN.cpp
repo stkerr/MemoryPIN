@@ -6,11 +6,28 @@
 #include <stdio.h>
 #include <time.h>
 
+#ifdef WINDOWS
 namespace WINDOWS 
 {
 	#include<Windows.h>
+	HANDLE hMonitoringEvent = 0;
+	HANDLE hSnapshotEvent = 0;
 }
+#else
+namespace POSIX
+{
+	#include <semaphore.h>
+	#include <pthread.h>
+	#include <semaphore.h>
+	#include <time.h>
+	sem_t *sMonitoringSem = 0;
+	sem_t *sSnapshotSem = 0;
+	
+	bool bMonitoring = true;
+	bool bSnapshoting = false;
 
+}
+#endif
 void dumpRegion(VOID * region);
 
 struct region
@@ -38,8 +55,6 @@ bool instructionTraceManualMode = false;
 boost::icl::interval_map<int, std::string> address_lib_interval_map;
 FILE *resultsFile = 0;
 FILE *instructionLogFile = 0;
-WINDOWS::HANDLE hMonitoringEvent = 0;
-WINDOWS::HANDLE hSnapshotEvent = 0;
 bool lastMonitoringStatus = 0; // record the last value for the monitoring event
 int memDumpCount = 1;
 unsigned long instructionCount = 0; // the number of instructions we have traced
@@ -49,6 +64,7 @@ unsigned int executionDepth = 0;
 
 bool CheckMonitoringEvent()
 {
+#ifdef WINDOWS
 	// Check the handle but return immediately
 	WINDOWS::DWORD result = WINDOWS::WaitForSingleObject(hMonitoringEvent, 0);
 
@@ -56,11 +72,18 @@ bool CheckMonitoringEvent()
 		return true;
 	else
 		return false;
+#else
+	POSIX::sem_wait(POSIX::sMonitoringSem);
+	bool result = POSIX::bMonitoring;
+	POSIX::sem_post(POSIX::sMonitoringSem);
+	return result;
+#endif
 
 }
 
 bool CheckSnapshotEvent()
 {
+#ifdef WINDOWS
 	// Check the handle but return immediately
 	WINDOWS::DWORD result = WINDOWS::WaitForSingleObject(hSnapshotEvent, 0);
 
@@ -68,32 +91,63 @@ bool CheckSnapshotEvent()
 		return true;
 	else
 		return false;	
+#else
+	POSIX::sem_wait(POSIX::sSnapshotSem);
+	bool result = POSIX::bSnapshoting;
+	POSIX::sem_post(POSIX::sSnapshotSem);
+	return result;
+#endif
 }
 
 void EnableMonitoringEvent()
 {
+#ifdef WINDOWS
 	// signal the event
 	WINDOWS::SetEvent(hMonitoringEvent);
+	pthread_mutexattr_setname_np(mMonitoringEvent);
+#else
+	POSIX::sem_wait(POSIX::sMonitoringSem);
+	POSIX::bMonitoring = true;
+	POSIX::sem_post(POSIX::sMonitoringSem);
+#endif
 }
 
 void EnableSnapshotEvent()
 {
+#ifdef WINDOWS
 	WINDOWS::SetEvent(hSnapshotEvent);
+#else
+	POSIX::sem_wait(POSIX::sSnapshotSem);
+	POSIX::bSnapshoting = true;
+	POSIX::sem_post(POSIX::sSnapshotSem);
+#endif
 }
 void DisableMonitoringEvent()
 {
+#ifdef WINDOWS
 	WINDOWS::ResetEvent(hMonitoringEvent);
+#else
+	POSIX::sem_wait(POSIX::sMonitoringSem);
+	POSIX::bMonitoring = false;
+	POSIX::sem_post(POSIX::sMonitoringSem);
+#endif
 }
 
 void DisableSnapshotEvent()
 {
+#ifdef WINDOWS
 	WINDOWS::ResetEvent(hSnapshotEvent);
+#else
+	POSIX::sem_wait(POSIX::sSnapshotSem);
+	POSIX::bSnapshoting = false;
+	POSIX::sem_post(POSIX::sSnapshotSem);
+#endif
 }
 
 void InitEvents()
 {
+#ifdef WINDOWS
 	int error = 0;
-
 	hMonitoringEvent = WINDOWS::OpenEvent(
 		EVENT_ALL_ACCESS,
 		false,
@@ -127,6 +181,15 @@ void InitEvents()
 	        TEXT("SnapshotEvent")  // object name
 	        );
 	}
+#else
+	// Create the semaphores
+	POSIX::sMonitoringSem = POSIX::sem_open("MONITORING_SEMAPHORE", O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, 0);
+	POSIX::sem_init(POSIX::sMonitoringSem, 1, 0); // shared, not signaled
+
+	POSIX::sSnapshotSem = POSIX::sem_open("SNAPSHOT_SEMAPHORE", O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, 0);
+	POSIX::sem_init(POSIX::sSnapshotSem, 1, 0); // shared, not signaled
+
+#endif
 }
 
 void DumpAllMemoryRegions(char* filename)
@@ -181,6 +244,7 @@ void InstructionTrace(INS ins, void* v)
 	bool monitoringStatus = CheckMonitoringEvent();
 	if(!monitoringStatus)
 	{
+	printf("Skipping!\n");
 		return;
 	}
 	
@@ -211,11 +275,16 @@ void InstructionTrace(INS ins, void* v)
     	executionDepth--;
     }
 
-    printf("Depth: %d\n", executionDepth);
-    
-    fprintf(instructionLogFile, "Instruction Count: %d |", instructionCount++);
-	fprintf(instructionLogFile, "Time: %d |", WINDOWS::GetTickCount());
-	fprintf(instructionLogFile, "Depth: %d |", executionDepth);
+    fprintf(instructionLogFile, "Instruction Count: %lu |", instructionCount++);
+#ifdef WINDOWS
+    fprintf(instructionLogFile, "Time: %d |", WINDOWS::GetTickCount());
+#else
+    timeval time;
+    gettimeofday(&time, NULL);
+    unsigned long millis = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+    fprintf(instructionLogFile, "Time: %lu |", millis);
+#endif
+    fprintf(instructionLogFile, "Depth: %d |", executionDepth);
     fprintf(instructionLogFile, "\n");
  }
 
@@ -406,6 +475,7 @@ VOID BBLTrace(TRACE trace, VOID *v)
  */
 int main(int argc, char *argv[])
 {
+    PIN_InitSymbols();
     // Initialize PIN library. Print help message if -h(elp) is specified
     // in the command line or the command line is invalid 
     if( PIN_Init(argc,argv) )
@@ -426,7 +496,6 @@ int main(int argc, char *argv[])
 
     if(KnobInstructionTrace.Value())
     {
-    	
     	INS_AddInstrumentFunction(InstructionTrace, 0);
     	instructionLogFile = fopen("instructionTrace.txt","w");
     }
