@@ -20,6 +20,7 @@
 # Ignore the Pin libraries
 /pin-2.12-58423-msvc10-windows/*
 /pin-2.12-58423-gcc.4.4.7-linux/*
+/pin-2.12-58423-clang.3.0-mac/*
 *.exp
 
 .project
