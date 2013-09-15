@@ -36,6 +36,14 @@ struct region
 	unsigned char* end;
 };
 
+typedef struct logObject_t
+{
+	char filename[1024];
+	void* buffer;
+	unsigned int usedSize;
+	unsigned int maxSize;
+} logObject;
+
 /*
  * Command line switches to define the memory region to monitor
  */
@@ -61,6 +69,54 @@ unsigned long instructionCount = 0; // the number of instructions we have traced
 std::ofstream TraceFile;
 UINT32 count_trace = 0; // current trace number
 unsigned int executionDepth = 0;
+logObject logger;
+logObject libraryLogger;
+
+bool LogMessage(logObject *loggerObject, char* message)
+{
+	if(message == 0 || message[0] == 0)
+	{
+		return false;
+	}
+	if(loggerObject->buffer == 0)
+	{
+		loggerObject->buffer = malloc(1024 * 1024); // 1 MB log by default
+		memset(loggerObject->buffer, 0, 1024 * 1024);
+		loggerObject->maxSize = 1024*1024;
+	}
+
+	unsigned int length = strlen(message);
+	
+	//printf("log size: %d/%d\n", loggerObject->usedSize, loggerObject->maxSize);
+	if(loggerObject->usedSize + length >= loggerObject->maxSize)
+	{
+		// allocate some new memory
+		loggerObject->buffer = realloc(loggerObject->buffer, loggerObject->maxSize * 2);
+		loggerObject->maxSize *= 2;
+		printf("Resizing memory! %s\n", message);
+	}
+
+	strcat((char*)loggerObject->buffer + loggerObject->usedSize, message);
+	loggerObject->usedSize = loggerObject->usedSize + length;
+	
+	return true;
+}
+
+bool CloseLog(logObject *loggerObject)
+{
+	if(loggerObject == 0)
+	{
+		printf("Logger is null!\n");
+		return false;
+	}
+
+	printf("Writing log to: %s\n", loggerObject->filename);
+	FILE* logFile = fopen(loggerObject->filename, "w");
+	fprintf(logFile, "%s", loggerObject->buffer);
+	fclose(logFile);
+	return true;
+}
+
 
 bool CheckMonitoringEvent()
 {
@@ -244,13 +300,17 @@ void InstructionTrace(INS ins, void* v)
 	bool monitoringStatus = CheckMonitoringEvent();
 	if(!monitoringStatus)
 	{
-	printf("Skipping!\n");
 		return;
 	}
 	
-	fprintf(instructionLogFile, "Thread ID: %8d |", PIN_GetTid());
+	char buffer[1024];
+	memset(buffer, 0, 1024);
+	snprintf(buffer, 1024, "Thread ID: %8d |", PIN_GetTid());
+	LogMessage(&logger, buffer);
 
-    fprintf(instructionLogFile, "Instruction Address: %08d |", (int)INS_Address(ins));
+	memset(buffer, 0, 1024);
+	snprintf(buffer, 1024, "Instruction Address: %llx |", INS_Address(ins));
+	LogMessage(&logger, buffer);
 
     boost::icl::interval_map<int, std::string>::iterator it = address_lib_interval_map.begin();
 
@@ -260,8 +320,9 @@ void InstructionTrace(INS ins, void* v)
         std::string name = (*it++).second;
         if(boost::icl::contains(range, (int)INS_Address(ins)))
         {
-            fprintf(instructionLogFile, "Library Name: %s |", name.c_str());
-            //std::cout << range << ":" << name << std::endl;
+		memset(buffer, 0, 256);
+		snprintf(buffer, 256, "Library Name: %s |", name.c_str());
+		LogMessage(&logger,buffer);
             break;
         }
     }
@@ -275,36 +336,39 @@ void InstructionTrace(INS ins, void* v)
     	executionDepth--;
     }
 
-    fprintf(instructionLogFile, "Instruction Count: %lu |", instructionCount++);
+    memset(buffer, 0, 256);
+    snprintf(buffer, 256, "Instruction Count: %lu |", instructionCount++);
+    LogMessage(&logger,buffer);
+
 #ifdef WINDOWS
-    fprintf(instructionLogFile, "Time: %d |", WINDOWS::GetTickCount());
+    memset(buffer, 0, 256);
+    snprintf(buffer, 256, "Time: %d |", WINDOWS::GetTickCount());
+    LogMessage(&logger,buffer);
 #else
     timeval time;
     gettimeofday(&time, NULL);
     unsigned long millis = (time.tv_sec * 1000) + (time.tv_usec / 1000);
-    fprintf(instructionLogFile, "Time: %lu |", millis);
+    memset(buffer, 0, 256);
+    snprintf(buffer, 256, "Time: %lu |", millis);
+    LogMessage(&logger,buffer);
 #endif
-    fprintf(instructionLogFile, "Depth: %d |", executionDepth);
-    fprintf(instructionLogFile, "\n");
+    memset(buffer, 0, 256);
+    snprintf(buffer, 256, "Depth: %d |", executionDepth);
+    LogMessage(&logger,buffer);
+
+    memset(buffer, 0, 256);
+    snprintf(buffer, 256, "\n");
+    LogMessage(&logger,buffer);
  }
 
 void ImageLoadedFunction(IMG img, void* data)
 {
 	if(KnobLibraryLoadTrace.Value())
 	{
-		//printf("Image loaded\n");
-		fprintf(resultsFile, "Library Name: %s|Start Address: %d|End Address: %d|Entry Address: %d\n", IMG_Name(img).c_str(), (int)IMG_LowAddress(img), (int)IMG_HighAddress(img), (int)IMG_Entry(img));
-		/*
-		fprintf(resultsFile, "------\n");
-		fprintf(resultsFile, "Loading Image: %s\n", IMG_Name(img).c_str());
-		fprintf(resultsFile, "\tLoading Location:\n");
-		fprintf(resultsFile, "\t0x%08x to 0x%08x\n", (int)IMG_LowAddress(img), (int)IMG_HighAddress(img));
-		fprintf(resultsFile, "\tFirst Instruction address: 0x%08x\n", (int)IMG_Entry(img));
-		*/
-		//fprintf(resultsFile, "\tFirst Section: 0x%08x\n", (int)IMG_SecHead(img));
-		//fprintf(resultsFile, "\tLast Section: 0x%08x\n", (int)IMG_SecTail(img));
-		//fprintf(resultsFile, "------\n");
-		fflush(resultsFile);
+		char buffer[2048];
+		memset(buffer, 0, 2048);
+		snprintf(buffer, 2048, "Library Name: %50s | Start Address: %16llx | End Address: %16llx | Entry Address: %16llx\n", IMG_Name(img).c_str(), IMG_LowAddress(img), IMG_HighAddress(img), IMG_Entry(img));
+		LogMessage(&libraryLogger, buffer);
 	}
     boost::icl::discrete_interval<int> itv = boost::icl::discrete_interval<int>::right_open(
         (int)IMG_LowAddress(img),
@@ -423,6 +487,9 @@ void finishFunction(int code, void* data)
 	if(instructionLogFile != 0)
 		fclose(instructionLogFile);
 
+	CloseLog(&logger);
+	CloseLog(&libraryLogger);
+
 	TraceFile.close();
 }
 
@@ -475,6 +542,9 @@ VOID BBLTrace(TRACE trace, VOID *v)
  */
 int main(int argc, char *argv[])
 {
+    strncpy(logger.filename,"instructionTrace.txt",1024);
+    strncpy(libraryLogger.filename,"libraryTrace.txt",1024);
+
     PIN_InitSymbols();
     // Initialize PIN library. Print help message if -h(elp) is specified
     // in the command line or the command line is invalid 
