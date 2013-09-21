@@ -298,9 +298,8 @@ namespace MemoryPINGui
 
         private void processInstructionFileButton_Click(object sender, EventArgs e)
         {
-            libraryProcessor = new LibraryResultsProcessor("memorypin.txt");
+            libraryProcessor = new LibraryResultsProcessor("libraryTrace.txt");
             processor = new InstructionProcessor("instructionTrace.txt", libraryProcessor.Libraries);
-
             librariesBindingSource.DataSource = processor.Libraries.Select(x => x.Name);
             instructionBindingSource.DataSource = processor.Instructions;
             threadBindingSource.DataSource = processor.Threads;

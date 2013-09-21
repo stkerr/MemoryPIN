@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include <time.h>
 
-#ifdef WINDOWS
+#ifdef TARGET_WINDOWS
+
+#define snprintf _snprintf
 namespace WINDOWS 
 {
 	#include<Windows.h>
@@ -120,9 +122,9 @@ bool CloseLog(logObject *loggerObject)
 
 bool CheckMonitoringEvent()
 {
-#ifdef WINDOWS
+#ifdef TARGET_WINDOWS
 	// Check the handle but return immediately
-	WINDOWS::DWORD result = WINDOWS::WaitForSingleObject(hMonitoringEvent, 0);
+	WINDOWS::DWORD result = WINDOWS::WaitForSingleObject(WINDOWS::hMonitoringEvent, 0);
 
 	if(result == 0) // WAIT_OBJECT_0
 		return true;
@@ -139,9 +141,9 @@ bool CheckMonitoringEvent()
 
 bool CheckSnapshotEvent()
 {
-#ifdef WINDOWS
+#ifdef TARGET_WINDOWS
 	// Check the handle but return immediately
-	WINDOWS::DWORD result = WINDOWS::WaitForSingleObject(hSnapshotEvent, 0);
+	WINDOWS::DWORD result = WINDOWS::WaitForSingleObject(WINDOWS::hSnapshotEvent, 0);
 
 	if(result == 0) // WAIT_OBJECT_0
 		return true;
@@ -157,10 +159,9 @@ bool CheckSnapshotEvent()
 
 void EnableMonitoringEvent()
 {
-#ifdef WINDOWS
+#ifdef TARGET_WINDOWS
 	// signal the event
-	WINDOWS::SetEvent(hMonitoringEvent);
-	pthread_mutexattr_setname_np(mMonitoringEvent);
+	WINDOWS::SetEvent(WINDOWS::hMonitoringEvent);
 #else
 	POSIX::sem_wait(POSIX::sMonitoringSem);
 	POSIX::bMonitoring = true;
@@ -170,8 +171,8 @@ void EnableMonitoringEvent()
 
 void EnableSnapshotEvent()
 {
-#ifdef WINDOWS
-	WINDOWS::SetEvent(hSnapshotEvent);
+#ifdef TARGET_WINDOWS
+	WINDOWS::SetEvent(WINDOWS::hSnapshotEvent);
 #else
 	POSIX::sem_wait(POSIX::sSnapshotSem);
 	POSIX::bSnapshoting = true;
@@ -180,8 +181,8 @@ void EnableSnapshotEvent()
 }
 void DisableMonitoringEvent()
 {
-#ifdef WINDOWS
-	WINDOWS::ResetEvent(hMonitoringEvent);
+#ifdef TARGET_WINDOWS
+	WINDOWS::ResetEvent(WINDOWS::hMonitoringEvent);
 #else
 	POSIX::sem_wait(POSIX::sMonitoringSem);
 	POSIX::bMonitoring = false;
@@ -191,8 +192,8 @@ void DisableMonitoringEvent()
 
 void DisableSnapshotEvent()
 {
-#ifdef WINDOWS
-	WINDOWS::ResetEvent(hSnapshotEvent);
+#ifdef TARGET_WINDOWS
+	WINDOWS::ResetEvent(WINDOWS::hSnapshotEvent);
 #else
 	POSIX::sem_wait(POSIX::sSnapshotSem);
 	POSIX::bSnapshoting = false;
@@ -202,35 +203,35 @@ void DisableSnapshotEvent()
 
 void InitEvents()
 {
-#ifdef WINDOWS
+#ifdef TARGET_WINDOWS
 	int error = 0;
-	hMonitoringEvent = WINDOWS::OpenEvent(
+	WINDOWS::hMonitoringEvent = WINDOWS::OpenEvent(
 		EVENT_ALL_ACCESS,
 		false,
 		"MonitoringEvent"
 		);
 
 	error = WINDOWS::GetLastError();
-	if(hMonitoringEvent == 0 && error == 2)
+	if(WINDOWS::hMonitoringEvent == 0 && error == 2)
 	{
-		hMonitoringEvent = WINDOWS::CreateEvent( 
-        NULL,               // default security attributes
-        TRUE,               // manual-reset event
-        FALSE,              // initial state is nonsignaled
-        TEXT("MonitoringEvent")  // object name
-        );	
+		WINDOWS::hMonitoringEvent = WINDOWS::CreateEvent( 
+		NULL,               // default security attributes
+		TRUE,               // manual-reset event
+		FALSE,              // initial state is nonsignaled
+		TEXT("MonitoringEvent")  // object name
+		);	
 	}
 
-	hSnapshotEvent = WINDOWS::OpenEvent(
+	WINDOWS::hSnapshotEvent = WINDOWS::OpenEvent(
 		EVENT_ALL_ACCESS,
 		false,
 		"SnapshotEvent"
 		);
 	
 	error = WINDOWS::GetLastError();
-	if(hSnapshotEvent == 0 && error == 2)
+	if(WINDOWS::hSnapshotEvent == 0 && error == 2)
 	{
-		hSnapshotEvent = WINDOWS::CreateEvent( 
+		WINDOWS::hSnapshotEvent = WINDOWS::CreateEvent( 
 	        NULL,               // default security attributes
 	        TRUE,               // manual-reset event
 	        FALSE,              // initial state is nonsignaled
@@ -309,7 +310,7 @@ void InstructionTrace(INS ins, void* v)
 	LogMessage(&logger, buffer);
 
 	memset(buffer, 0, 1024);
-	snprintf(buffer, 1024, "Instruction Address: %llx |", INS_Address(ins));
+	snprintf(buffer, 1024, "Instruction Address: %d |", INS_Address(ins));
 	LogMessage(&logger, buffer);
 
     boost::icl::interval_map<int, std::string>::iterator it = address_lib_interval_map.begin();
@@ -340,7 +341,7 @@ void InstructionTrace(INS ins, void* v)
     snprintf(buffer, 256, "Instruction Count: %lu |", instructionCount++);
     LogMessage(&logger,buffer);
 
-#ifdef WINDOWS
+#ifdef TARGET_WINDOWS
     memset(buffer, 0, 256);
     snprintf(buffer, 256, "Time: %d |", WINDOWS::GetTickCount());
     LogMessage(&logger,buffer);
@@ -367,7 +368,7 @@ void ImageLoadedFunction(IMG img, void* data)
 	{
 		char buffer[2048];
 		memset(buffer, 0, 2048);
-		snprintf(buffer, 2048, "Library Name: %50s | Start Address: %16llx | End Address: %16llx | Entry Address: %16llx\n", IMG_Name(img).c_str(), IMG_LowAddress(img), IMG_HighAddress(img), IMG_Entry(img));
+		snprintf(buffer, 2048, "Library Name: %50s | Start Address: %20d | End Address: %20d | Entry Address: %20d\n", IMG_Name(img).c_str(), IMG_LowAddress(img), IMG_HighAddress(img), IMG_Entry(img));
 		LogMessage(&libraryLogger, buffer);
 	}
     boost::icl::discrete_interval<int> itv = boost::icl::discrete_interval<int>::right_open(
