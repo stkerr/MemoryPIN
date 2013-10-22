@@ -44,7 +44,7 @@ SA_TOOL_ROOTS :=
 APP_ROOTS := 
 
 # This defines any additional object files that need to be compiled.
-OBJECT_ROOTS := MemoryPin second
+OBJECT_ROOTS :=
 
 # This defines any additional dlls (shared objects), other than the pintools, that need to be compiled.
 DLL_ROOTS :=
@@ -73,7 +73,10 @@ LIB_ROOTS :=
 # This section contains the build rules for all binaries that have special build rules.
 # See makefile.default.rules for the default build rules.
 
-$(OBJDIR)MemoryPinApp$(PINTOOL_SUFFIX): $(OBJDIR)MemoryPin$(OBJ_SUFFIX) $(OBJDIR)second$(OBJ_SUFFIX)
+SRCLIST := $(wildcard *.cpp)
+OBJLIST := $(addprefix $(OBJDIR),$(notdir $(SRCLIST:.cpp=$(OBJ_SUFFIX))))
+
+$(OBJDIR)MemoryPinApp$(PINTOOL_SUFFIX): $(OBJLIST)
 	$(LINKER) $(TOOL_LDFLAGS) $(LINK_EXE)$@ $^ $(TOOL_LPATHS) $(TOOL_LIBS)
   
   
