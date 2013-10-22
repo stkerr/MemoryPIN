@@ -73,10 +73,13 @@ LIB_ROOTS :=
 # This section contains the build rules for all binaries that have special build rules.
 # See makefile.default.rules for the default build rules.
 
-SRCLIST := $(wildcard *.cpp)
-OBJLIST := $(addprefix $(OBJDIR),$(notdir $(SRCLIST:.cpp=$(OBJ_SUFFIX))))
+SRCLIST := $(wildcard src/*.cpp)
+OBJLIST = $(patsubst src/%.cpp,$(OBJDIR)%$(OBJ_SUFFIX),$(SRCLIST))
+
+$(OBJDIR)%$(OBJ_SUFFIX): src/%.cpp
+	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 $(OBJDIR)MemoryPinApp$(PINTOOL_SUFFIX): $(OBJLIST)
 	$(LINKER) $(TOOL_LDFLAGS) $(LINK_EXE)$@ $^ $(TOOL_LPATHS) $(TOOL_LIBS)
   
-  
+
