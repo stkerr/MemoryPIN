@@ -8,7 +8,7 @@
 
 unsigned long instructionCount = 0; // the number of instructions we have traced
 
-unsigned int executionDepth = 0;
+unsigned int executionDepth = 0; // will trace how "deep" we are, in terms of calls and returns
 
 void InstructionTrace(INS ins, void* v)
 {
@@ -30,61 +30,38 @@ void InstructionTrace(INS ins, void* v)
 		return;
 	}
 
-	char buffer[1024];
-	memset(buffer, 0, 1024);
-	snprintf(buffer, 1024, "Thread ID: %8d |", PIN_GetTid());
-	LogMessage(&logger, buffer);
+	instruction_trace trace;
+	trace.tid = PIN_GetTid();
+	trace.address = INS_Address(ins);
 
-	memset(buffer, 0, 1024);
-	snprintf(buffer, 1024, "Instruction Address: %d |", INS_Address(ins));
-	LogMessage(&logger, buffer);
-	
 	std::string libraryName;
-	if (GetLibraryName(INS_Address(ins), &libraryName))
+	if (CHECK_LIBRARY_NAMES && GetLibraryName(trace.address, &libraryName))
 	{
-		memset(buffer, 0, 256);
-		snprintf(buffer, 256, "Library Name: %s |", libraryName.c_str());
-		LogMessage(&logger, buffer);
+		snprintf(trace.library_name, sizeof(trace.library_name), "%s", libraryName.c_str());
 	}
 	else
-	{
-		memset(buffer, 0, 256);
-		snprintf(buffer, 256, "Library Name: %s |", "UNKNOWN");
-		LogMessage(&logger, buffer);
-	}
+		trace.library_name[0] = 0;
 
 
 	if (INS_IsCall(ins) == true)
 	{
-		executionDepth++;
+		trace.execution_depth = executionDepth++;
 	}
 	else if (INS_IsRet(ins) == true)
 	{
-		executionDepth--;
+		trace.execution_depth = executionDepth--;
 	}
 
-	memset(buffer, 0, 256);
-	snprintf(buffer, 256, "Instruction Count: %lu |", instructionCount++);
-	LogMessage(&logger, buffer);
-
+	trace.instruction_count = instructionCount++;
+	
 #ifdef TARGET_WINDOWS
-	memset(buffer, 0, 256);
-	snprintf(buffer, 256, "Time: %d |", WINDOWS::GetTickCount());
-	LogMessage(&logger, buffer);
+	trace.execution_time = WINDOWS::GetTickCount();
 #else
 	timeval time;
 	gettimeofday(&time, NULL);
 	unsigned long millis = (time.tv_sec * 1000) + (time.tv_usec / 1000);
-	memset(buffer, 0, 256);
-	snprintf(buffer, 256, "Time: %lu |", millis);
-	LogMessage(&logger, buffer);
+	trace.execution_time = millis;
 #endif
 
-	memset(buffer, 0, 256);
-	snprintf(buffer, 256, "Depth: %d |", executionDepth);
-	LogMessage(&logger, buffer);
-
-	memset(buffer, 0, 256);
-	snprintf(buffer, 256, "\n");
-	LogMessage(&logger, buffer);
+	LogStruct(trace);
 }

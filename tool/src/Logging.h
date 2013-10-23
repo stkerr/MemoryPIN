@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <fstream>
 
+#include "OsDefines.h"
+#include "InstructionTracer.h"
+
 extern FILE *resultsFile;
 extern FILE *instructionLogFile;
 
@@ -23,5 +26,7 @@ bool LogMessage(logObject *loggerObject, char* message);
 bool CloseLog(logObject *loggerObject);
 
 void FinishFunction(int code, void* data);
+
+bool LogStruct(instruction_trace t);
 
 #endif

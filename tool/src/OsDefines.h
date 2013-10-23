@@ -2,11 +2,11 @@
 #define __OS_DEFINES__
 
 #include "pin.H"
+#include "Configuration.h"
 
 #ifdef TARGET_WINDOWS
 	
 	#define snprintf _snprintf
-
 
 /*
 This namespace would normally cause an error, since you can't

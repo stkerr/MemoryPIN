@@ -23,9 +23,6 @@ KNOB<BOOL> KnobLibraryLoadTrace(KNOB_MODE_OVERWRITE, "pintool", "libraryLoadTrac
 KNOB<BOOL> KnobMonitorRegion(KNOB_MODE_OVERWRITE, "pintool", "monitorRegion", "false", "Enable region monitoring.");
 
 
-// Globals needed to record the region in memory to monitor globally
-
-
 void ImageLoadedFunction(IMG img, void* data)
 {
 	if(KnobLibraryLoadTrace.Value())
@@ -46,7 +43,6 @@ void ImageLoadedFunction(IMG img, void* data)
             std::string(IMG_Name(img))
         )
         );
-
 }
 
 
@@ -69,29 +65,47 @@ void appEndFunction(int exitCode, void* region)
  */
 int main(int argc, char *argv[])
 {
-    strncpy(logger.filename,"instructionTrace.txt",1024);
-    strncpy(libraryLogger.filename,"libraryTrace.txt",1024);
+	strncpy(logger.filename, "instructionTrace.txt", 1024);
+	strncpy(libraryLogger.filename, "libraryTrace.txt", 1024);
 
-    PIN_InitSymbols();
-    // Initialize PIN library. Print help message if -h(elp) is specified
-    // in the command line or the command line is invalid 
-    if( PIN_Init(argc,argv) )
-    {
-        std::cerr << KNOB_BASE::StringKnobSummary() << endl;
-        return -1;
-    }
+	PIN_InitSymbols();
+	// Initialize PIN library. Print help message if -h(elp) is specified
+	// in the command line or the command line is invalid 
+	if (PIN_Init(argc, argv))
+	{
+		std::cerr << KNOB_BASE::StringKnobSummary() << endl;
+		return -1;
+	}
 
-    // Initialize monitoring and snapshot events
+	// Initialize monitoring and snapshot events
 	InitSnapshottingEvent();
 	InitMonitoringEvent();
 
-    resultsFile = fopen(KnobResultsFile.Value().c_str(), "w");
-    TraceFile.open("tracefile.txt");
+	resultsFile = fopen(KnobResultsFile.Value().c_str(), "w");
+	TraceFile.open("tracefile.txt");
 
 	PIN_SetSyntaxIntel();
-	TRACE_AddInstrumentFunction(BBLTrace, 0);
-    IMG_AddInstrumentFunction(ImageLoadedFunction, 0);
 
+	if (USE_BBLTRACE)
+	{
+		printf("Enabling BBLTrace() functionality.");
+		TRACE_AddInstrumentFunction(BBLTrace, 0);
+	}
+	else
+	{
+		printf("Disabling BBLTrace() functionality.");
+	}
+
+	if (USE_IMAGELOADED)
+	{
+		IMG_AddInstrumentFunction(ImageLoadedFunction, 0);
+		printf("Enabling ImageLoadedFunction()");
+	}
+	else
+	{
+		printf("Disabling ImageLoadedFunction()");
+	}
+    
     if(KnobInstructionTrace.Value())
     {
     	INS_AddInstrumentFunction(InstructionTrace, 0);

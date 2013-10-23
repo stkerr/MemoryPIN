@@ -68,3 +68,9 @@ void FinishFunction(int code, void* data)
 
 	TraceFile.close();
 }
+
+bool LogStruct(instruction_trace t)
+{
+	printf("LogStruct(instruction_trace) not implemented!");
+	return true;
+}
