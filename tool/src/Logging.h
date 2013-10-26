@@ -22,6 +22,7 @@ extern logObject logger;
 extern logObject libraryLogger;
 extern std::ofstream TraceFile;
 
+bool LogMessage(logObject *loggerObject, std::string message);
 bool LogMessage(logObject *loggerObject, char* message);
 bool CloseLog(logObject *loggerObject);
 

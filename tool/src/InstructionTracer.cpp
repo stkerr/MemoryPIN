@@ -34,14 +34,13 @@ void InstructionTrace(INS ins, void* v)
 	trace.tid = PIN_GetTid();
 	trace.address = INS_Address(ins);
 
+	memset(trace.library_name, 0, 260);
 	std::string libraryName;
-	if (CHECK_LIBRARY_NAMES && GetLibraryName(trace.address, &libraryName))
+	if (CHECK_LIBRARY_NAMES && GetLibraryName(trace.address, libraryName))
 	{
 		snprintf(trace.library_name, sizeof(trace.library_name), "%s", libraryName.c_str());
 	}
-	else
-		trace.library_name[0] = 0;
-
+	
 
 	if (INS_IsCall(ins) == true)
 	{
@@ -51,6 +50,8 @@ void InstructionTrace(INS ins, void* v)
 	{
 		trace.execution_depth = executionDepth--;
 	}
+	else
+		trace.execution_depth = executionDepth;
 
 	trace.instruction_count = instructionCount++;
 	

@@ -30,6 +30,7 @@ void ImageLoadedFunction(IMG img, void* data)
 		char buffer[2048];
 		memset(buffer, 0, 2048);
 		snprintf(buffer, 2048, "Library Name: %50s | Start Address: %20d | End Address: %20d | Entry Address: %20d\n", IMG_Name(img).c_str(), IMG_LowAddress(img), IMG_HighAddress(img), IMG_Entry(img));
+
 		LogMessage(&libraryLogger, buffer);
 	}
     boost::icl::discrete_interval<int> itv = boost::icl::discrete_interval<int>::right_open(

@@ -121,7 +121,7 @@ void MemoryMonitorFunction(INS ins, void* region)
 	}
 }
 
-bool GetLibraryName(const int address, std::string *name)
+bool GetLibraryName(const int address, std::string name)
 {
 	boost::icl::interval_map<int, std::string>::iterator it = address_lib_interval_map.begin();
 
@@ -131,7 +131,7 @@ bool GetLibraryName(const int address, std::string *name)
 		
 		if (boost::icl::contains(range, address))
 		{
-			*name = (*it++).second;
+			name = (*it++).second;
 			return true;
 		}
 	}

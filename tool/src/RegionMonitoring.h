@@ -16,7 +16,7 @@ void RecordMemWrite(void* ip, void* addr);
 void DumpRegion(void* region);
 void DumpAllMemoryRegions(char* filename);
 void MemoryMonitorFunction(INS ins, void* region);
-bool GetLibraryName(int address, std::string *name);
+bool GetLibraryName(int address, std::string name);
 
 extern struct region monitorRegion;
 

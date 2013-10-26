@@ -203,7 +203,7 @@ namespace MemoryPINGui
                                     {
                                         //throw new InvalidDataException("Somehow executed a non-loaded library!");
                                         Library strange = new Library();
-                                        strange.Name = "(!) " + keyvalue[1].Trim();
+                                        strange.Name = keyvalue[1].Trim();
                                         if(!libraries.Contains(strange))
                                             libraries.Add(strange);
                                     }
@@ -211,10 +211,10 @@ namespace MemoryPINGui
                                     if (lib.Count != 0)
                                     {
                                         instr.Library = lib.First();
-                                        }
+                                    }
                                     else
                                     {
-                                        Console.WriteLine("Found an instruction without a corresponding library!");
+                                        //Console.WriteLine("Found an instruction without a corresponding library!");
                                     }
                                     if (!IncludedLibraries.Contains(keyvalue[1]))
                                     {
