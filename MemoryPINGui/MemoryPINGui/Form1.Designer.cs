@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.libraryRebaseMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.histogramEntryBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.histogramEntryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -57,8 +59,6 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.loadedLibraryList = new System.Windows.Forms.ListBox();
-            this.libraryListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.librariesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.processInstructionFileButton = new System.Windows.Forms.Button();
             this.resultsGridView = new System.Windows.Forms.DataGridView();
@@ -80,6 +80,8 @@
             this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.histogramBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource)).BeginInit();
             this.tabContainer.SuspendLayout();
@@ -87,7 +89,6 @@
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.libraryListContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.librariesBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).BeginInit();
@@ -96,6 +97,24 @@
             ((System.ComponentModel.ISupportInitialize)(this.histogramDataView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogramBindingSource)).BeginInit();
             this.SuspendLayout();
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.libraryRebaseMenuItem});
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.ShowImageMargin = false;
+            contextMenuStrip1.Size = new System.Drawing.Size(128, 48);
+            // 
+            // libraryRebaseMenuItem
+            // 
+            this.libraryRebaseMenuItem.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.libraryRebaseMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.libraryRebaseMenuItem.Name = "libraryRebaseMenuItem";
+            this.libraryRebaseMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.libraryRebaseMenuItem.Text = "Library Rebase";
+            this.libraryRebaseMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // histogramEntryBindingSource1
             // 
@@ -380,7 +399,7 @@
             // loadedLibraryList
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.loadedLibraryList, 2);
-            this.loadedLibraryList.ContextMenuStrip = this.libraryListContextMenu;
+            this.loadedLibraryList.ContextMenuStrip = contextMenuStrip1;
             this.loadedLibraryList.DataSource = this.librariesBindingSource;
             this.loadedLibraryList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.loadedLibraryList.FormattingEnabled = true;
@@ -389,23 +408,7 @@
             this.loadedLibraryList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.loadedLibraryList.Size = new System.Drawing.Size(717, 157);
             this.loadedLibraryList.TabIndex = 2;
-            this.loadedLibraryList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.loadedLibraryList_MouseClick);
-            this.loadedLibraryList.SelectedIndexChanged += new System.EventHandler(this.loadedLibraryList_SelectedIndexChanged);
             this.loadedLibraryList.SelectedValueChanged += new System.EventHandler(this.loadedLibraryList_SelectedValueChanged);
-            // 
-            // libraryListContextMenu
-            // 
-            this.libraryListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
-            this.libraryListContextMenu.Name = "libraryListContextMenu";
-            this.libraryListContextMenu.Size = new System.Drawing.Size(151, 26);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(150, 22);
-            this.toolStripMenuItem1.Text = "Library Rebase";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // librariesBindingSource
             // 
@@ -590,6 +593,7 @@
             this.Controls.Add(this.tabContainer);
             this.Name = "Form1";
             this.Text = "Form1";
+            contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogramEntryBindingSource)).EndInit();
             this.tabContainer.ResumeLayout(false);
@@ -600,7 +604,6 @@
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.libraryListContextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.librariesBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultsGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.instructionBindingSource)).EndInit();
@@ -646,8 +649,6 @@
         private System.Windows.Forms.DataGridView resultsGridView;
         private System.Windows.Forms.ListBox loadedThreadList;
         private System.Windows.Forms.BindingSource threadBindingSource;
-        private System.Windows.Forms.ContextMenuStrip libraryListContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.BindingSource histogramBindingSource;
         private System.Windows.Forms.BindingSource histogramEntryBindingSource;
@@ -664,6 +665,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn threadidDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn LibraryName;
+        private System.Windows.Forms.ToolStripMenuItem libraryRebaseMenuItem;
     }
 }
 

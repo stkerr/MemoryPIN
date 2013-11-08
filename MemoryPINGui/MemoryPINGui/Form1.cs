@@ -298,8 +298,10 @@ namespace MemoryPINGui
 
         private void processInstructionFileButton_Click(object sender, EventArgs e)
         {
+            
             libraryProcessor = new LibraryResultsProcessor("libraryTrace.txt");
-            processor = new InstructionProcessor("instructionTrace.txt", libraryProcessor.Libraries);
+            
+            processor = new InstructionProcessor("instructionTrace.txt", libraryProcessor.Libraries, libraryProcessor);
             librariesBindingSource.DataSource = processor.Libraries.Select(x => x.Name);
             instructionBindingSource.DataSource = processor.Instructions;
             threadBindingSource.DataSource = processor.Threads;
@@ -322,6 +324,7 @@ namespace MemoryPINGui
             
             // invoke the data source change handler since we were ignoring it before
             resultsGridView_DataSourceChanged(null, null);
+            Console.WriteLine("Done processing.");
         }
 
         private void resultsPageActive(object sender, EventArgs e)
@@ -398,7 +401,7 @@ namespace MemoryPINGui
             if (libraryProcessor == null)
                 libraryProcessor = new LibraryResultsProcessor("memorypin.txt");
             if (processor == null)
-                processor = new InstructionProcessor("instructionTrace.txt", libraryProcessor.Libraries);
+                processor = new InstructionProcessor("instructionTrace.txt", libraryProcessor.Libraries, libraryProcessor);
 
             IList<Instruction> instrs = processor.Instructions;
 

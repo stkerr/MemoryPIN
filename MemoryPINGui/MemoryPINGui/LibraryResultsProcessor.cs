@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace MemoryPINGui
 {
@@ -56,21 +57,41 @@ namespace MemoryPINGui
             get { return libraries; }
             set { libraries = value; }
         }
-        
+
+        public LibraryResultsProcessor(IList<Library> libraries)
+        {
+            this.libraries = libraries;
+
+            libraries_string_interval = new Dictionary<string, Interval>();
+            libraries_interval_string = new Dictionary<Interval, string>();
+
+            
+            Library nullLibrary = new Library();
+            nullLibrary.Name = "Select to view only system calls";
+            nullLibrary.Originaladdress = 0;
+            nullLibrary.PeSupport = null;
+            this.libraries.Add(nullLibrary);
+            
+            foreach (Library l in this.libraries)
+            {
+                if(l.PeSupport != null)
+                    AddLibraryRange(l.Name, l.PeSupport.ImageBase, l.PeSupport.ImageBase + l.PeSupport.ImageSize);
+            }
+        }
+
         public LibraryResultsProcessor(string filename)
         {
             
             libraries = new List<Library>();
             libraries_string_interval = new Dictionary<string,Interval>();
             libraries_interval_string = new Dictionary<Interval, string>();
-
-
+            
             Library nullLibrary = new Library();
             nullLibrary.Name = "Select to view only system calls";
             nullLibrary.Originaladdress = 0;
             nullLibrary.PeSupport = null;
             libraries.Add(nullLibrary);
-
+            
             using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 using (StreamReader sr = new StreamReader(fs))
@@ -101,7 +122,6 @@ namespace MemoryPINGui
                             {
                                 case "Library Name":
                                     library.Name = keyvalue[1].Trim();
-                                    
 
                                     try
                                     {
@@ -110,7 +130,7 @@ namespace MemoryPINGui
                                     }
                                     catch (ApplicationException e)
                                     {
-                                        library.PeSupport = null;
+                                        library.PeSupport = new PESupport("C:\\Program Files\\Java\\jdk1.7.0_45\\bin\\jli.dll");
                                     }
                                     
                                     break;
@@ -123,7 +143,7 @@ namespace MemoryPINGui
                                     }
                                     else
                                     {
-                                        library.Loadaddress = 0;
+                                        library.Loadaddress = 0x1337BEEF;
                                     //    library.Originaladdress= 0;
                                     }
                                     break;
@@ -135,10 +155,21 @@ namespace MemoryPINGui
                                     break;
                             }
                         }
+
+                        Debug.WriteLine("Name: {0} Base: {1:X} End: {2:X}", library.Name, library.PeSupport.ImageBase, library.PeSupport.ImageBase + library.PeSupport.ImageSize);
+
                         Libraries.Add(library);
                     }
                 }
             }
+
+            foreach (Library l in this.libraries)
+            {
+                if (l.PeSupport != null)
+                {
+                    AddLibraryRange(l.Name, (int)l.Loadaddress, (int)(l.Loadaddress + l.PeSupport.ImageSize));
+                }
+            }   
         }
 
         public bool AddLibraryRange(string libraryname, int startAddress, int endAddress)
@@ -155,12 +186,21 @@ namespace MemoryPINGui
             foreach(Interval i in libraries_string_interval.Values)
             {  
                 // don't insert a new library if we arlready have something here
-                if (i.Contains(startAddress) || i.Contains(endAddress))
+                if (i.Contains(startAddress+1) || i.Contains(endAddress))
                 {
                     return false;
                 }
             }
 
+            foreach (string s in libraries_interval_string.Values)
+            {
+                if (s.CompareTo(libraryname) == 0)
+                {
+                    return false;
+                }
+            }
+
+            Debug.WriteLine("Adding: {0} to {1:X}-{2:X}", libraryname, startAddress, endAddress);
             // insert the new interval
             Interval interval = new Interval(startAddress, endAddress);
 

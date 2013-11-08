@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace MemoryPINGui
 {
@@ -482,6 +483,11 @@ namespace MemoryPINGui
             get { return (int)optionalHeader.ImageBase; }
         }
 
+        public int ImageSize
+        {
+            get { return (int)optionalHeader.SizeOfImage; }
+        }
+
         public Dictionary<int, List<string>> Exports
         {
             get { return exports; }
@@ -496,12 +502,15 @@ namespace MemoryPINGui
 
         public PESupport(string LibraryName)
         {
-            this.LibraryName = LibraryName;
+            Debug.Assert(LibraryName != null);
 
+            this.LibraryName = LibraryName;
+            
             hLibrary = IntPtr.Zero;
             IntPtr original_hLibrary = LoadLibraryEx(this.LibraryName, IntPtr.Zero, LoadLibraryFlags.DONT_RESOLVE_DLL_REFERENCES); // access violations occur with LOAD_LIBRARY_AS_DATAFILE, but don't with DONT_RESOLVE_DLL_REFERENCES for some reason
             hLibrary = new IntPtr(original_hLibrary.ToInt32() - original_hLibrary.ToInt32() % 4); // adjust things to a DWORD boundary
 
+            
             int error = Marshal.GetLastWin32Error();
             if (hLibrary == null && error != 0)
             {
@@ -528,10 +537,17 @@ namespace MemoryPINGui
             }
             optionalHeader = ntHeader.OptionalHeader;
 
+            exports = new Dictionary<int, List<string>>();
+
+            // if we don't have an export directory, move on
+            if (optionalHeader.ExportTable.VirtualAddress == 0 || optionalHeader.ExportTable.Size == 0)
+            {
+                FreeLibrary(original_hLibrary);
+                return;
+            }
+            
             // initialise the export header
             exportHeader = (IMAGE_EXPORT_DIRECTORY)Marshal.PtrToStructure(hLibrary + (int)optionalHeader.ExportTable.VirtualAddress, typeof(IMAGE_EXPORT_DIRECTORY));
-
-            exports = new Dictionary<int, List<string>>();
 
             for (int i = 0; i < exportHeader.NumberOfNames; i++)
             {
@@ -540,13 +556,20 @@ namespace MemoryPINGui
                 IntPtr namePtr = (IntPtr)Marshal.PtrToStructure(hLibrary + (int)(exportHeader.AddressOfNames) + (4 * i), typeof(IntPtr));
 
                 // dereference the previous char*
-                string name = Marshal.PtrToStringAnsi(hLibrary + namePtr.ToInt32());
+                string name;
+                try
+                {
+                    name = Marshal.PtrToStringAnsi(hLibrary + namePtr.ToInt32());
+                }
+                catch (Exception ex)
+                {
+                    name = "";
+                    Console.WriteLine(ex.StackTrace);
+                }
 
                 // grab the address for this function
                 int address = ((IntPtr)Marshal.PtrToStructure(hLibrary + (int)(exportHeader.AddressOfFunctions) + 4 * i, typeof(IntPtr))).ToInt32();
                 address += (int)optionalHeader.ImageBase;
-
-
 
                 if (exports.ContainsKey(address))
                 {
@@ -560,8 +583,9 @@ namespace MemoryPINGui
 
 
             }
+             
 
-            //FreeLibrary(original_hLibrary);
+            FreeLibrary(original_hLibrary);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace MemoryPINGui
 {
@@ -104,7 +105,7 @@ namespace MemoryPINGui
                                                                 &&
                                                                 x.Depth <= HighFilterDepth
                                                                 &&
-                                                                x.Depth >= LowFilterDepth
+                                                                x.Depth >= LowFilterDepth    
                                                             )
                                                             
                                                             ).ToList<Instruction>();
@@ -120,7 +121,7 @@ namespace MemoryPINGui
             set { instructions = value; }
         }
 
-        public InstructionProcessor(string filename, IList<Library> libraries)
+        public InstructionProcessor(string filename, IList<Library> libraries, LibraryResultsProcessor processor)
         {
             this.libraries = libraries;
             instructions = new List<Instruction>();
@@ -147,6 +148,9 @@ namespace MemoryPINGui
             colorBank[13] = Color.FromArgb(189, 140, 191);
             colorBank[14] = Color.FromArgb(244, 154, 193);
             colorBank[15] = Color.FromArgb(245, 152, 157);
+
+            Library strange = new Library();
+            strange.Name = "INVALID";
 
             using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -201,9 +205,8 @@ namespace MemoryPINGui
                                 case "Library Name":
                                     if (libraries.Where(x => x.Name.Equals(keyvalue[1].Trim())).ToList().Count == 0)
                                     {
+                                        instr.Library = strange;
                                         //throw new InvalidDataException("Somehow executed a non-loaded library!");
-                                        Library strange = new Library();
-                                        strange.Name = keyvalue[1].Trim();
                                         if(!libraries.Contains(strange))
                                             libraries.Add(strange);
                                     }
@@ -214,17 +217,12 @@ namespace MemoryPINGui
                                     }
                                     else
                                     {
-                                        //Console.WriteLine("Found an instruction without a corresponding library!");
+                                        Console.WriteLine("Found an instruction without a corresponding library!");
                                     }
                                     if (!IncludedLibraries.Contains(keyvalue[1]))
                                     {
                                         IncludedLibraries.Add(keyvalue[1]);
                                     }
-                                    /*
-                                    instr.Library.Loadaddress = lib.First().Loadaddress;
-                                    instr.Library.Originaladdress = lib.First().Originaladdress;
-                                    instr.Library.SystemCallName = keyvalue[1].Trim();
-                                     */
                                     break;
                                 case "Instruction Count":
                                     int count;
@@ -254,9 +252,6 @@ namespace MemoryPINGui
                                     break;
 
                             }
-
-                            
-                            
                         }
 
                         if (MaxDepth < instr.Depth)
@@ -264,13 +259,35 @@ namespace MemoryPINGui
                         if (MinDepth > instr.Depth)
                             MinDepth = instr.Depth;
                         instructions.Add(instr);
-
                     }
                 }
             }
 
-            foreach(Instruction instr in Instructions)
+            
+            
+
+            foreach(Instruction instr in this.instructions)
             {
+                if (instr.Library == strange)
+                {
+                    // This is an unresolved library, instruction address pairing. Let's patch it up.
+                    instr.LibraryName = processor.GetLibraryName((int)instr.Address);
+                    foreach(Library l in this.Libraries)
+                    {
+                        if (l.Name != null && l.Name.CompareTo(instr.LibraryName) == 0)
+                        {
+                            instr.Library = l;
+                            break;
+                        }
+                    }
+                    if (instr.LibraryName == null)
+                    {
+                        //Debug.WriteLine("Couldnt resolve address {0:X} to a library. Traced as {1:X}.", instr.Address, instr.Address_traced);
+                        instr.Library = strange;
+                        instr.LibraryName = "STRANGE MODE";
+                    }
+                }
+
                 List<string> outValue = new List<string>();
                 if (instr.Library.PeSupport != null && instr.Library.PeSupport.Exports.TryGetValue((int)instr.Address, out outValue))
                 {
@@ -280,3 +297,4 @@ namespace MemoryPINGui
         }
     }
 }
+
